@@ -54,6 +54,29 @@ class Verifone(object):
         if self._test_mode:
             return 'https://epayment.test.point.fi/pw/serverinterface'
         return 'https://epayment1.point.fi/pw/serverinterface'
+    
+    @property
+    def test_mode(self):
+        """ Return 1 if client is in test mode.
+
+        :return: 1 if is in test mode, integer
+        """
+        return self._test_mode
+    
+    @test_mode.setter
+    def test_mode(self, value):
+        """ Method saves a new test_mode value.
+
+        :param value: test mode, value can be 1 (test mode) or 0 (production), integer
+
+        :return: None
+        """
+        if not value:
+            value = 0
+        elif value != 0 and value != 1:
+            logs.debug("Wrong value for test mode")
+            raise ValueError("Test mode can be 1 or 0")
+        self._test_mode = value
 
     @property
     def currency(self):

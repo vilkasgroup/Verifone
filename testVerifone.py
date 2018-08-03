@@ -299,7 +299,25 @@ class TestVerifone(unittest.TestCase):
         }
         with self.assertRaises(ValueError): 
             self._verifone_client.process_supplementary(params) 
+    
+    def test_020_get_endpoint(self):
+        """ Test for getting endpoints """
+        verifone_cl = verifone.Verifone('test_apikey', '1234', 'Test', 'IntegrationTest', '6.0.37', 'eur')
+        self.assertEqual(verifone_cl.endpoint, 'https://epayment1.point.fi/pw/serverinterface')
+
+        verifone_cl.test_mode = 1
+        self.assertEqual(verifone_cl.endpoint, 'https://epayment.test.point.fi/pw/serverinterface')
  
+    def test_021_save_test_mode(self):
+        """ Test for save test mode """
+        verifone_cl = verifone.Verifone('test_apikey', '1234', 'Test', 'IntegrationTest', '6.0.37', 'eur')
+        self.assertEqual(verifone_cl.test_mode, 0)
+
+        verifone_cl.test_mode = 1
+        self.assertEqual(verifone_cl.test_mode, 1)
+
+        with self.assertRaises(ValueError): 
+            verifone_cl.test_mode = 3
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
