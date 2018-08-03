@@ -7,6 +7,7 @@ from Crypto.Signature import PKCS1_v1_5
 import binascii
 import requests
 import pycountry
+import urllib.parse
 
 logs = logging.getLogger(__name__)
 
@@ -234,6 +235,32 @@ class Verifone(object):
         """ Method sends payment data to Verifone.
 
         :param data: data added to payment request, dictionary
+            - locale-f-2-5_payment-locale: locale for the customer, string
+            - t-f-14-19_payment-timestamp: UTC timestamp defining the payment start time, format is yyyy-MM-dd HH:mm:ss, string (optional)
+            - s-f-1-36_order-number: order number, length is 1-36 characters, string
+            - t-f-14-19_order-timestamp: UTC time defining orders time in format yyyy-MM-dd HH:mm:ss, string (optional)
+            - s-t-1-36_order-note: note, 1-36 characters (optional)
+            - l-f-1-20_order-gross-amount: total amount including taxes and discount with two decimal precision (for example 100 means 1 EUR), integer
+            - s-f-1-30_buyer-first-name: the first name of the customer with 1-30 characters, string
+            - s-f-1-30_buyer-last-name: the last name of the customer with 1-30 characters, string
+            - s-t-1-30_buyer-phone-number: the phone number of the customer with 1-30 characters, string (optional)
+            - s-f-1-100_buyer-email-address: the email of the customer with 1-100 characters, string
+            - s-t-1-255_buyer-external-id: identifier for the customer with 1-255 characters, string (optional)
+            - s-t-1-30_delivery-address-line-one: delivery address, string (optional)
+            - s-t-1-30_delivery-address-line-two: delivery address, string (optional)
+            - s-t-1-30_delivery-address-line-three: delivery address, string (optional)
+            - s-t-1-30_delivery-address-city: city for the delivery address, string (optional)
+            - s-t-1-30_delivery-address-postal-code: postal code for the delivery address, string (optional)
+            - i-t-1-3_delivery-address-country-code: country code of the delivery address, string with 2 character or numeric ISO 3166  (optional)
+            - l-t-1-20_saved-payment-method-id: ID of the saved payment method with 1-20 characters, string (optional)
+            - i-t-1-1_recurring-payment: is payment recurring payment, integer (optional)
+                0: Not recurring payment
+                1: Recurring payment
+            - i-t-1-1_deferred-payment: is payment deferred payment, integer (optional)
+                0: Not deferred payment
+                1: Deferred payment
+            - s-f-1-30_payment-method-code: used payment method, string 
+            - 0-50 basket items are supported
         :return: payment information returned from Verifone, dictionary
         """
         options = {
@@ -241,13 +268,19 @@ class Verifone(object):
             "i-f-1-3_order-currency-code": self.currency,
         }
 
+        current_datetime = datetime.utcnow()
+        timestamp = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
+
+        if not 't-f-14-19_payment-timestamp' in data:
+            data['t-f-14-19_payment-timestamp'] = timestamp
+
+        if not 't-f-14-19_order-timestamp' in data:
+            data['t-f-14-19_order-timestamp'] = timestamp
+
         logs.debug(data['i-t-1-3_delivery-address-country-code'])
         if 'i-t-1-3_delivery-address-country-code' in data and data['i-t-1-3_delivery-address-country-code'].isalpha():
             country_data = pycountry.countries.get(alpha_2 = data['i-t-1-3_delivery-address-country-code'])
             data['i-t-1-3_delivery-address-country-code'] = country_data.numeric
-
-        # merge data to request options
-        options.update(data)
 
         return self.send_request(options)
 
@@ -311,11 +344,45 @@ class Verifone(object):
         """ Method generates payment link.
 
         :param data: parameters for request, dictionary
+            - locale-f-2-5_payment-locale: locale for the customer, string
+            - t-f-14-19_order-expiry-timestamp: UTC time when the payment link expires in format yyyy-MM-dd HH:mm:ss, string
+            - s-f-1-36_order-number: order number, length is 1-36 characters, string
+            - t-f-14-19_order-timestamp:  UTC time defining orders time in format yyyy-MM-dd HH:mm:ss, string
+            - s-t-1-36_order-note: note, 1-36 characters (optional)
+            - l-f-1-20_order-gross-amount: total amount including taxes and discount with two decimal precision (for example 100 means 1 EUR), integer
+            - l-f-1-20_order-net-amount: amount without discount or taxes, integer
+            - l-f-1-20_order-vat-amount: VAT amount, integer
+            - s-t-1-30_payment-method-code: used payment method, string (optional)
+            - s-t-1-36_payment-link-number: number of the payment link in 1-36 characters, string (optional)
+            - s-f-1-32_payment-link-delivery-mode: delivery mode of the payment link, supported values are sms or email, string
+            - s-f-1-30_buyer-first-name: the first name of the customer with 1-30 characters, string
+            - s-f-1-30_buyer-last-name: the last name of the customer with 1-30 characters, string
+            - s-t-1-30_buyer-phone-number: the phone number of the customer with 1-30 characters, string (optional)
+            - s-f-1-100_buyer-email-address: the email of the customer with 1-100 characters, string
+            - s-t-1-255_buyer-external-id: identifier for the customer with 1-255 characters, string (optional)
+            - s-t-1-30_delivery-address-line-one: delivery address, string (optional)
+            - s-t-1-30_delivery-address-line-two: delivery address, string (optional)
+            - s-t-1-30_delivery-address-line-three: delivery address, string (optional)
+            - s-t-1-30_delivery-address-city: city for the delivery address, string (optional)
+            - s-t-1-30_delivery-address-postal-code: postal code for the delivery address, string (optional)
+            - i-t-1-3_delivery-address-country-code: country code of the delivery address, string with 2 character or numeric ISO 3166  (optional)
+            - l-t-1-20_saved-payment-method-id: ID of the saved payment method with 1-20 characters, string (optional)
+            - i-t-1-1_deferred-payment: is payment deferred payment, integer (optional)
+                0: Not deferred payment
+                1: Deferred payment
+            - s-t-1-160_additional-delivery-text: text included in link email or SMS with 1-160 characters, string (optional)
+            - s-t-1-128_sender-email: This address will be shown as sender in the link email, 1-128 characters, string (optional)
+            - 0-50 basket items are supported
         :return: payment link information, dictionary
             - s-t-1-36_payment-link-number: created payment-link-number
         """
+        if 'i-t-1-3_delivery-address-country-code' in data and data['i-t-1-3_delivery-address-country-code'].isalpha():
+            country_data = pycountry.countries.get(alpha_2 = data['i-t-1-3_delivery-address-country-code'])
+            data['i-t-1-3_delivery-address-country-code'] = country_data.numeric
+
         options = {
             "s-f-1-30_operation": "generate-payment-link",
+            "i-f-1-3_order-currency-code": self.currency,
         }
 
         # merge data to request options
@@ -402,14 +469,22 @@ class Verifone(object):
                 - unit_cost_gross: unit cost with two decimal, with discount and tax
                 - unit_cost: unit cost with two decimal and without tax and discounts, this must be filled if  
                     unit gross cost is not filled, otherwise must not be used (optional)
+            - payment_timestamp: the payment start time, format is yyyy-MM-dd HH:mm:ss (optional)
+            - order_timestamp: the orders time from web shop point of view, format is yyyy-MM-dd HH:mm:ss (optional)
                       
         :return: generated payment data, dictionary
         """
         if data:
             current_datetime = datetime.utcnow()
             timestamp = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
+
+            if not 'payment_timestamp' in data:
+                data['payment_timestamp'] = timestamp
+
+            if not 'order_timestamp' in data:
+                data['order_timestamp'] = timestamp
                     
-            payment_token = self.generate_token(data['order_number'], timestamp)
+            payment_token = self.generate_token(data['order_number'], data['payment_timestamp'])
          
             if 'style' in data:
                 style_code = data['style']
@@ -424,8 +499,8 @@ class Verifone(object):
             values = {
                 's-f-32-32_payment-token': payment_token, 
                 'locale-f-2-5_payment-locale': data['locale'],
-                't-f-14-19_payment-timestamp': timestamp,
-                't-f-14-19_order-timestamp': timestamp,  #TODO käytä tätä, jos parametrinä ei ole tuotu erillistä
+                't-f-14-19_payment-timestamp': data['payment_timestamp'],
+                't-f-14-19_order-timestamp': data['order_timestamp'],  
                 's-f-1-36_merchant-agreement-code': self._agreement_code,
                 's-f-1-36_order-number': data['order_number'],
                 'i-f-1-3_order-currency-code': self.currency,
@@ -534,12 +609,11 @@ class Verifone(object):
             raise ValueError("No content returned")
 
         parsed_response = self.parse_response(response.content)
-
-        #TODO tarkista paluusanoman signature
-        self.verify_response(parsed_response)
         
         if 's-f-1-30_error-message' in parsed_response:
             raise ValueError(parsed_response['s-f-1-30_error-message'])
+
+        self.verify_response(parsed_response)  
 
         return parsed_response     
 
@@ -552,17 +626,7 @@ class Verifone(object):
         :return: signature, 128 byte signature converted to upper case hexadecimal string
         """
         private_key = RSA.importKey(self._RSA_private_key)
-        name_key_pairs = [] 
-
-        # needed format is "key=value"
-        for key, value in (sorted(data.items())):
-            name_key_pairs.append(key + "=" + str(value))
-        
-        logs.debug(name_key_pairs)
-
-        plaintext =  ';'.join(name_key_pairs) + ';'
-        plaintext = plaintext.encode('utf-8')
-        logs.debug("Plaintext for signature: " + str(plaintext))
+        plaintext =  self.get_plaintext(data)
 
         digest = ''
         
@@ -580,65 +644,26 @@ class Verifone(object):
 
         return hex_signature.upper() 
 
-    def verify_response(self, content):
-        """ Method verifies response from Verifone.
+    def get_plaintext(self, data):
+        """ Method creates plaintext from dictionary.
+        Algorithm is RSA with SHA1 or RSA with SHA512
 
-        :param data: response content from Verifone, dictionary
+        :param data: data for the request, dictionary
+        :return: plain text, string
         """
-        print("++++++++++++++++++++++alkaa")
-
         name_key_pairs = [] 
 
         # needed format is "key=value"
-        for key, value in (sorted(content.items())):
-            if key != 's-t-256-256_signature-one' and key != 's-t-256-256_signature-two':
-                name_key_pairs.append(key + "=" + str(value))
+        for key, value in (sorted(data.items())):
+            name_key_pairs.append(key + "=" + str(value))
         
         logs.debug(name_key_pairs)
 
         plaintext =  ';'.join(name_key_pairs) + ';'
         plaintext = plaintext.encode('utf-8')
-        logs.debug("Plaintext for signature: " + str(plaintext))
-
-
-        print("verifonen public key")
-        print(self._RSA_verifone_public_key)
-        public_key = RSA.importKey(self._RSA_verifone_public_key) 
-        signer = PKCS1_v1_5.new(public_key)
-
-        print(content['s-t-256-256_signature-one'])
-        digest = SHA.new(plaintext) #SHA1
-        signature = content['s-t-256-256_signature-one']
-        result = signer.verify(digest, binascii.unhexlify(signature.lower()))
-        print(result)
-
-        #digest = SHA.new() 
-        #print(digest)
-
-        #signature = signer.sign(digest)
-        #hex_signature = binascii.hexlify(signature)
-
-        #print("+++++-------+++++++")
-        #TODO = signer.verify(digest, content['s-t-256-256_signature-one'].encode())
-        #print(TODO)
-        #TODO = signer.verify(digest, binascii.unhexlify(content['s-t-256-256_signature-one'].encode()))
-        #print(TODO)
-        #TODO = signer.verify(hex_signature, content['s-t-256-256_signature-one'])
-        #print(TODO)
-        #print("------+++++-------+++++++")
-
-
-        #print(content['s-t-256-256_signature-two'])
-
-
-
-        print("++++++++++++++++++++++loppuu")
+        logs.debug("Plaintext for signature: " + str(plaintext))  
         
-    def verify_signature(self, signature, signature_type):
-        """TODO
-        """
-        pass
-
+        return plaintext
 
     def parse_response(self, content):
         """ Method parses response content returned from Verifone.
@@ -653,6 +678,7 @@ class Verifone(object):
 
         for param in params:
             key, value = param.split('=')
+            value = urllib.parse.unquote_plus(value) # for example times are in format: 2018-08-03+06%3A59%3A52
             result[key] = value
         
         logs.debug(result)
@@ -734,3 +760,51 @@ class Verifone(object):
                 product_data['l-t-1-20_bi-unit-cost-'+ str(i)] = self.format_to_integer(data[i]['unit_cost'])
 
         return product_data
+
+    def verify_response(self, data):
+        """ Method verifies response from Verifone.
+
+        :param data: parsed content from Verifone, dictionary
+        :return: true if response is valid, boolean
+        """
+        values = data.copy()
+        sign1 = values['s-t-256-256_signature-one']   
+        sign2 = values['s-t-256-256_signature-two'] 
+        del values['s-t-256-256_signature-one']
+        del values['s-t-256-256_signature-two']
+
+        plaintext = self.get_plaintext(values)
+        result = self.verify_signature(sign1, 'SHA1', plaintext)
+        if not result:
+            logs.debug("SHA1 verification failed for plaintext: " + str(plaintext))
+            raise ValueError('SignatureVerificationFailed')
+
+        result = self.verify_signature(sign2, 'SHA512', plaintext)
+        if not result:
+            logs.debug("SHA512 verification failed for plaintext: " + str(plaintext))
+            raise ValueError('SignatureVerificationFailed')
+
+        return True
+
+    def verify_signature(self, signature, signature_type, plaintext):
+        """ Method verifies Verifone's signature.
+
+        :param signature: signature, string
+        :param signature_type: signature type, supported are SHA1 and SHA512, string
+        :param plaintext: plaintext, string
+        :return: true if response is valid, boolean
+        """
+        digest = ''
+        public_verifone = RSA.importKey(self._RSA_verifone_public_key) 
+        signer = PKCS1_v1_5.new(public_verifone)
+        logs.debug("Plaintext for verifying: " + str(plaintext))
+
+        if (signature_type == 'SHA1'):
+            digest = SHA.new(plaintext) 
+        elif (signature_type == 'SHA512'):
+            digest = SHA512.new(plaintext) 
+            
+        if digest:
+            return signer.verify(digest, binascii.unhexlify(signature))
+
+        return False
