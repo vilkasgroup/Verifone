@@ -20,13 +20,13 @@ class Verifone(object):
      - pycountry
      - requests
 
-    :param agreement_code: merchant agreement code, string with length of 1-36 characters  #TODO testaa pituus
+    :param agreement_code: merchant agreement code, string with length of 1-36 characters 
     :param RSA_private_key: RSA private key, string
     :param RSA_verifone_public_key: Verifone's RSA public key, string
     :param currency: currency code with three letters, default is EUR, string  
-    :param software_name: name of the web shop software, string with length of 1-30 characters  #TODO testaa pituus
-    :param version: version of the web shop software, string with length of 1-10 characters   #TODO testaa pituus
-    :param interface_version: version of the payment interface, string with length of 1-11 numeric characters  #TODO testaa pituus ja sisältö
+    :param software_name: name of the web shop software, string with length of 1-30 characters  
+    :param version: version of the web shop software, string with length of 1-10 characters   
+    :param interface_version: version of the payment interface, string with length of 1-11 numeric characters
     :param test_mode: 1 if use test server, default is 0, boolean
     :rtype: object
     """
@@ -152,7 +152,7 @@ class Verifone(object):
         :param data: data for cancelling, dictionary
             - s-f-1-30_payment-method-code: the used payment method code, string
             - l-f-1-20_transaction-number: transaction number identifying the payment transaction, string
-            - s-t-1-1024_dynamic-feedback: list of parameters to be added to response if available (optional) #TODO testaa
+            - s-t-1-1024_dynamic-feedback: list of parameters to be added to response if available (optional)
         :return: status for cancelling, dictionary
         """
         options = {
@@ -217,8 +217,8 @@ class Verifone(object):
             - l-f-1-20_refund-amount: amount to refund, integer
             - s-f-1-30_payment-method-code: the used payment method code, string
             - l-f-1-20_transaction-number: transaction number identifying the payment transaction, string
-            - s-t-1-36_order-note: note for the payment, 1-36 characters (optional) #TODO testaa
-            - s-t-1-1024_dynamic-feedback: list of parameters to be added to response if available (optional) #TODO testaa
+            - s-t-1-36_order-note: note for the payment, 1-36 characters (optional) 
+            - s-t-1-1024_dynamic-feedback: list of parameters to be added to response if available (optional)
         :return: status for refunding, dictionary
         """
         options = {
@@ -277,10 +277,12 @@ class Verifone(object):
         if not 't-f-14-19_order-timestamp' in data:
             data['t-f-14-19_order-timestamp'] = timestamp
 
-        logs.debug(data['i-t-1-3_delivery-address-country-code'])
         if 'i-t-1-3_delivery-address-country-code' in data and data['i-t-1-3_delivery-address-country-code'].isalpha():
             country_data = pycountry.countries.get(alpha_2 = data['i-t-1-3_delivery-address-country-code'])
             data['i-t-1-3_delivery-address-country-code'] = country_data.numeric
+
+        # merge data to request options
+        options.update(data)
 
         return self.send_request(options)
 
@@ -422,8 +424,6 @@ class Verifone(object):
         }
 
         return self.send_request(options)
-        
-    #TODO käsittelyt maksun paluufunkkareille
 
     def generate_payment_data(self, data):
         """ Method generates payment data which can be used in html form for showing payment button.
@@ -566,9 +566,7 @@ class Verifone(object):
 
         :param options: options for the request, dictionary
         :return: response from Verifone, dictionary
-        """
-        logs.debug("+++++++ send_request")
-        
+        """        
         current_time = datetime.now()
         timestamp = current_time.strftime('%Y-%m-%d %H:%M:%S')
         request_id = str(current_time.strftime('%Y%m%d%H%M%S'))+str(randrange(99999))
@@ -603,7 +601,7 @@ class Verifone(object):
         logs.debug(response)
         logs.debug(response.content)
 
-        if response.status_code != 200:  #TODO onko aina 200 ok-responselle??
+        if response.status_code != 200: 
             raise ConnectionError(str(response.content))
         elif not response.content:
             raise ValueError("No content returned")
@@ -635,8 +633,7 @@ class Verifone(object):
         elif signature_type == 'SHA1':
             digest = SHA.new(plaintext)
         else:
-            #TODO heitä virhe
-            logs.debug("++++++++-----")
+            raise ValueError('WrongSignatureType')
 
         signer = PKCS1_v1_5.new(private_key)
         signature = signer.sign(digest)

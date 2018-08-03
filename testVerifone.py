@@ -243,7 +243,7 @@ class TestVerifone(unittest.TestCase):
             's-t-1-255_buyer-external-id': os.environ.get('EXTERNALID'),  
             'l-t-1-20_saved-payment-method-id': saved_payment_id,   
         }
-        response = self._verifone_client.process_payment(params) #TODO ota tämä takaisin, kun raja taas toimii
+        response = self._verifone_client.process_payment(params) 
         self.assertTrue('l-f-1-20_transaction-number' in response)
         self.assertIsNotNone(response['l-f-1-20_transaction-number']) 
 
