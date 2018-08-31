@@ -8,7 +8,6 @@ name = "pypi"
 [packages]
 
 pylint = "*"
-pycrypto = "*"
 coverage = "*"
 pycountry = "*"
 rsa = "*"

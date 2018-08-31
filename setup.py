@@ -13,8 +13,8 @@ with open('HISTORY.rst') as history_file:
 
 requirements = [
     'requests>=2.7.0',
-    'pycrypto>=2.6.1',
-    'pycountry>=5.6.0',
+    'pycountry>=18.5.26',
+    'pycryptodome>=3.6.6',
 ]
 
 setup_requirements = [ ]

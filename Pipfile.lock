@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "9c873073bb93356557715831cd1aa202ff774123002721fe40d7244875080ac8"
+            "sha256": "a387ef9ea9f4774fb033ddf9c24000654ee9027f7aa3b24dba6ca65fe2f393d2"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -175,12 +175,6 @@
                 "sha256:7f2aa2529c60f6575af3cd644688b201b97016822ce0ce1c4bcc0f7d08900997"
             ],
             "version": "==18.5.26"
-        },
-        "pycrypto": {
-            "hashes": [
-                "sha256:f2ce1e989b272cfcb677616763e0a2e7ec659effa67a88aa92b3a65528f60a3c"
-            ],
-            "version": "==2.6.1"
         },
         "pylint": {
             "hashes": [

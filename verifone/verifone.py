@@ -19,7 +19,7 @@ class Verifone(object):
     """ Class for Verifone payment API.
 
     Following packages need to be installed:
-     - pycrypto
+     - pycryptodome
      - pycountry
      - requests
 
