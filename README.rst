@@ -13,6 +13,9 @@ Verifone
         :target: https://verifone.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
+.. image:: https://coveralls.io/repos/github/vilkasgroup/Verifone/badge.svg?branch=master
+   :target: https://coveralls.io/github/vilkasgroup/Verifone?branch=master
+   :alt: Coveralls status
 
 .. image:: https://pyup.io/repos/github/jhsaraja/verifone/shield.svg
      :target: https://pyup.io/repos/github/jhsaraja/verifone/
