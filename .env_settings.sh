@@ -1,0 +1,5 @@
+export AGREEMENTCODE="" 
+export RSAPRIVATEKEY=""
+export RSAVERIFONEPUBLICKEY=""
+export EMAIL="" 
+export EXTERNALID=""

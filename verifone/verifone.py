@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+
+"""Main module."""
 import logging
 from datetime import datetime
 from random import randrange

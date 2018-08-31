@@ -12,6 +12,7 @@ pycrypto = "*"
 coverage = "*"
 pycountry = "*"
 rsa = "*"
+requests = "*"
 
 
 [dev-packages]
