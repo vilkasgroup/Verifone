@@ -32,13 +32,13 @@ You can either clone the public repository:
 
 .. code-block:: console
 
-    $ git clone git://github.com/jhsaraja/verifone
+    $ git clone git://github.com/vilkasgroup/Verifone
 
 Or download the `tarball`_:
 
 .. code-block:: console
 
-    $ curl  -OL https://github.com/jhsaraja/verifone/tarball/master
+    $ curl  -OL https://github.com/vilkasgroup/Verifone/tarball/master
 
 Once you have a copy of the source, you can install it with:
 
@@ -47,5 +47,5 @@ Once you have a copy of the source, you can install it with:
     $ python setup.py install
 
 
-.. _Github repo: https://github.com/jhsaraja/verifone
-.. _tarball: https://github.com/jhsaraja/verifone/tarball/master
+.. _Github repo: https://github.com/vilkasgroup/Verifone
+.. _tarball: https://github.com/vilkasgroup/Verifone/tarball/master

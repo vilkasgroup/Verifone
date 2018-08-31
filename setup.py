@@ -22,8 +22,8 @@ setup_requirements = [ ]
 test_requirements = [ ]
 
 setup(
-    author="Jaana Sarajaärvi",
-    author_email='jaana@vilkas.fi',
+    author="Jaana Sarajärvi",
+    author_email='jaana.sarajarvi@vilkas.fi',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',

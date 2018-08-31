@@ -5,7 +5,7 @@ Credits
 Development Lead
 ----------------
 
-* Jaana Sarajaärvi <jaana@vilkas.fi>
+* Jaana Sarajärvi <jaana.sarajarvi@vilkas.fi>
 
 Contributors
 ------------
