@@ -14,6 +14,7 @@ with open('HISTORY.rst') as history_file:
 requirements = [
     'requests>=2.7.0',
     'pycrypto>=2.6.1',
+    'pycountry>=5.6.0',
 ]
 
 setup_requirements = [ ]
