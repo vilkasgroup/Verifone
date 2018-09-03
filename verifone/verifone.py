@@ -10,7 +10,11 @@ from Crypto.Signature import PKCS1_v1_5
 import binascii
 import requests
 import pycountry
-import urllib.parse
+
+try:
+    import urllib.parse
+except ImportError:
+    import urllib
 
 logs = logging.getLogger(__name__)
 
