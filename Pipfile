@@ -7,16 +7,20 @@ name = "pypi"
 
 [packages]
 
-pylint = "*"
-coverage = "*"
 pycountry = "*"
 rsa = "*"
 requests = "*"
+pycryptodome = "*"
 
 
 [dev-packages]
 
-pylint = "*"
+coverage = "*"
+sphinx = "*"
+sphinx-autobuild = "*"
+tox = "*"
+twine = "*"
+bumpversion = "*"
 
 
 [requires]
