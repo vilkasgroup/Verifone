@@ -27,6 +27,7 @@ class TestVerifone(unittest.TestCase):
     def setUpClass(cls):
         """ Set up our Verifone client for tests. It requires the following environment variables: AGREEMENTCODE, RSAPRIVATEKEY and EMAIL """
         cls._verifone_client = verifone.Verifone(os.environ.get('AGREEMENTCODE'), os.environ.get('RSAPRIVATEKEY'), os.environ.get('RSAVERIFONEPUBLICKEY'), "IntegrationTest", "6.0.37")
+        cls._test_requests = os.environ.get('TESTSENDINGREQUEST')
 
     def test_001_create_object_with_defaults(self):
         """ Test creating a new object with default values """
@@ -93,32 +94,34 @@ class TestVerifone(unittest.TestCase):
 
     def test_006_is_available(self):
         """ Test connection to Verifone server """
-        response = self._verifone_client.is_available()
-        self.assertTrue(response['i-f-1-1_availability'] == '2')
+        if (self._test_requests):
+            response = self._verifone_client.is_available()
+            self.assertTrue(response['i-f-1-1_availability'] == '2')
 
     def test_007_get_payment_methods(self):
         """ Test to get all available payment methods """
-        response = self._verifone_client.list_payment_methods()
-        self.assertIsNotNone(response['s-t-1-30_payment-method-code-0'])
+        if (self._test_requests):
+            response = self._verifone_client.list_payment_methods()
+            self.assertIsNotNone(response['s-t-1-30_payment-method-code-0'])
 
     def test_008_list_saved_payment_methods(self):
         """ Test to get saved payment methods """
-
-        params = {
-            's-f-1-30_buyer-first-name': 'Test',
-            's-f-1-30_buyer-last-name': 'Tester',
-            's-f-1-100_buyer-email-address': os.environ.get('EMAIL'),
-            's-t-1-30_buyer-phone-number': '123456789',
-            's-t-1-255_buyer-external-id': os.environ.get('EXTERNALID'),
-        }
-        response = self._verifone_client.list_saved_payment_methods(params)
-        self.assertTrue('l-t-1-20_payment-method-id-0' in response)
+        if (self._test_requests):
+            params = {
+                's-f-1-30_buyer-first-name': 'Test',
+                's-f-1-30_buyer-last-name': 'Tester',
+                's-f-1-100_buyer-email-address': os.environ.get('EMAIL'),
+                's-t-1-30_buyer-phone-number': '123456789',
+                's-t-1-255_buyer-external-id': os.environ.get('EXTERNALID'),
+            }
+            response = self._verifone_client.list_saved_payment_methods(params)
+            self.assertTrue('l-t-1-20_payment-method-id-0' in response)
 
     def test_009_remove_saved_payment_method(self):
         """ Test to remove saved payment method when saved payment method is wrong """
-
-        response = self._verifone_client.remove_saved_payment_method(123456)
-        self.assertEqual(response['l-t-1-10_removed-count'], '0')
+        if (self._test_requests):
+            response = self._verifone_client.remove_saved_payment_method(123456)
+            self.assertEqual(response['l-t-1-10_removed-count'], '0')
 
     def test_010_generate_payment_data(self):
         """ Test to generate payment data """
@@ -168,143 +171,151 @@ class TestVerifone(unittest.TestCase):
 
     def test_011_generate_payment_link(self):
         """ Test to generate payment link """
-
-        params = {
-            'locale-f-2-5_payment-locale': 'fi_FI',
-            't-f-14-19_order-expiry-timestamp': '2018-10-02 09:14:12',
-            's-f-1-36_order-number': '1234',
-            't-f-14-19_order-timestamp': '2018-08-03 04:58:22',
-            's-t-1-36_order-note': 'Test payment',
-            'i-f-1-3_order-currency-code': '978',
-            'l-f-1-20_order-gross-amount': '7602',
-            'l-f-1-20_order-net-amount': '6131',
-            'l-f-1-20_order-vat-amount': '1471',
-            's-t-1-30_payment-method-code': 'visa',
-            's-t-1-36_payment-link-number': '1234567',
-            's-f-1-32_payment-link-delivery-mode': 'email',
-            's-f-1-30_buyer-first-name': "Test",
-            's-f-1-30_buyer-last-name': "Tester",
-            's-t-1-30_buyer-phone-number': '1234567890',
-            's-f-1-100_buyer-email-address': os.environ.get('EMAIL'),
-            's-t-1-30_delivery-address-line-one': "Test Street 3",
-            's-t-1-30_delivery-address-city': "Tampere",
-            's-t-1-30_delivery-address-postal-code': "33210",
-            'i-t-1-3_delivery-address-country-code': '246',
-            's-t-1-30_bi-name-0': 'Test Product',  # can be 0-50 items
-            'l-t-1-20_bi-unit-gross-cost-0': '7602',
-            'i-t-1-11_bi-unit-count-0': '1',
-            'l-t-1-20_bi-gross-amount-0': '7602',
-            'l-t-1-20_bi-net-amount-0': '6131',
-            'i-t-1-4_bi-vat-percentage-0': '2400',
-            'i-t-1-4_bi-discount-percentage-0': 0,
-        }
-        with self.assertRaises(ValueError):
-            self._verifone_client.generate_payment_link(params)
+        if (self._test_requests):
+            params = {
+                'locale-f-2-5_payment-locale': 'fi_FI',
+                't-f-14-19_order-expiry-timestamp': '2018-10-02 09:14:12',
+                's-f-1-36_order-number': '1234',
+                't-f-14-19_order-timestamp': '2018-08-03 04:58:22',
+                's-t-1-36_order-note': 'Test payment',
+                'i-f-1-3_order-currency-code': '978',
+                'l-f-1-20_order-gross-amount': '7602',
+                'l-f-1-20_order-net-amount': '6131',
+                'l-f-1-20_order-vat-amount': '1471',
+                's-t-1-30_payment-method-code': 'visa',
+                's-t-1-36_payment-link-number': '1234567',
+                's-f-1-32_payment-link-delivery-mode': 'email',
+                's-f-1-30_buyer-first-name': "Test",
+                's-f-1-30_buyer-last-name': "Tester",
+                's-t-1-30_buyer-phone-number': '1234567890',
+                's-f-1-100_buyer-email-address': os.environ.get('EMAIL'),
+                's-t-1-30_delivery-address-line-one': "Test Street 3",
+                's-t-1-30_delivery-address-city': "Tampere",
+                's-t-1-30_delivery-address-postal-code': "33210",
+                'i-t-1-3_delivery-address-country-code': '246',
+                's-t-1-30_bi-name-0': 'Test Product',  # can be 0-50 items
+                'l-t-1-20_bi-unit-gross-cost-0': '7602',
+                'i-t-1-11_bi-unit-count-0': '1',
+                'l-t-1-20_bi-gross-amount-0': '7602',
+                'l-t-1-20_bi-net-amount-0': '6131',
+                'i-t-1-4_bi-vat-percentage-0': '2400',
+                'i-t-1-4_bi-discount-percentage-0': 0,
+            }
+            with self.assertRaises(ValueError):
+                self._verifone_client.generate_payment_link(params)
 
     def test_012_get_payment_link_status(self):
         """ Test to get payment link status. """
-        with self.assertRaises(ValueError):
-            self._verifone_client.get_payment_link_status(12345678)
+        if (self._test_requests):
+            with self.assertRaises(ValueError):
+                self._verifone_client.get_payment_link_status(12345678)
 
     def test_013_reactivate_payment_link(self):
         """ Test to reactivate payment link. """
-        current_time = datetime.now()
-        timestamp = current_time.strftime('%Y-%m-%d %H:%M:%S')
+        if (self._test_requests):
+            current_time = datetime.now()
+            timestamp = current_time.strftime('%Y-%m-%d %H:%M:%S')
 
-        with self.assertRaises(ValueError):
-            self._verifone_client.reactivate_payment_link(12345678, timestamp)
+            with self.assertRaises(ValueError):
+                self._verifone_client.reactivate_payment_link(12345678, timestamp)
 
     def test_014_process_payment(self):
         """ Test to process payment """
-        params = {
-            's-f-1-30_buyer-first-name': 'Test',
-            's-f-1-30_buyer-last-name': 'Tester',
-            's-f-1-100_buyer-email-address': os.environ.get('EMAIL'),
-            's-t-1-30_buyer-phone-number': '123456789',
-            's-t-1-255_buyer-external-id': os.environ.get('EXTERNALID'),
-        }
-        response = self._verifone_client.list_saved_payment_methods(params)
-        saved_payment_id = response['l-t-1-20_payment-method-id-0']
-        self.assertIsNotNone(saved_payment_id)
+        if (self._test_requests):
+            params = {
+                's-f-1-30_buyer-first-name': 'Test',
+                's-f-1-30_buyer-last-name': 'Tester',
+                's-f-1-100_buyer-email-address': os.environ.get('EMAIL'),
+                's-t-1-30_buyer-phone-number': '123456789',
+                's-t-1-255_buyer-external-id': os.environ.get('EXTERNALID'),
+            }
+            response = self._verifone_client.list_saved_payment_methods(params)
+            saved_payment_id = response['l-t-1-20_payment-method-id-0']
+            self.assertIsNotNone(saved_payment_id)
 
-        params = {
-            'locale-f-2-5_payment-locale': 'fi_FI',
-            's-f-1-36_order-number': '1234',
-            'l-f-1-20_order-gross-amount': 2391,
-            's-f-1-30_buyer-first-name': "Test",
-            's-f-1-30_buyer-last-name': "Tester",
-            's-t-1-30_buyer-phone-number': 123456789,
-            's-f-1-100_buyer-email-address': os.environ.get('EMAIL'),
-           's-t-1-30_delivery-address-line-one': "Test Street 3",
-            's-t-1-30_delivery-address-city': "Tampere",
-            's-t-1-30_delivery-address-postal-code': "33210",
-            'i-t-1-3_delivery-address-country-code': 'FI',
-            's-t-1-30_bi-name-0': 'Test Product',
-            'l-t-1-20_bi-unit-gross-cost-0': 2391,
-            'i-t-1-11_bi-unit-count-0': 1,
-            'l-t-1-20_bi-gross-amount-0': 2391,
-            'l-t-1-20_bi-net-amount-0': 1928,
-            'i-t-1-4_bi-vat-percentage-0': 2400,
-            'i-t-1-4_bi-discount-percentage-0': 0,
-            's-t-1-255_buyer-external-id': os.environ.get('EXTERNALID'),
-            'l-t-1-20_saved-payment-method-id': saved_payment_id,
-        }
-        response = self._verifone_client.process_payment(params)
-        self.assertTrue('l-f-1-20_transaction-number' in response)
-        self.assertIsNotNone(response['l-f-1-20_transaction-number'])
+            params = {
+                'locale-f-2-5_payment-locale': 'fi_FI',
+                's-f-1-36_order-number': '1234',
+                'l-f-1-20_order-gross-amount': 2391,
+                's-f-1-30_buyer-first-name': "Test",
+                's-f-1-30_buyer-last-name': "Tester",
+                's-t-1-30_buyer-phone-number': 123456789,
+                's-f-1-100_buyer-email-address': os.environ.get('EMAIL'),
+                's-t-1-30_delivery-address-line-one': "Test Street 3",
+                's-t-1-30_delivery-address-city': "Tampere",
+                's-t-1-30_delivery-address-postal-code': "33210",
+                'i-t-1-3_delivery-address-country-code': 'FI',
+                's-t-1-30_bi-name-0': 'Test Product',
+                'l-t-1-20_bi-unit-gross-cost-0': 2391,
+                'i-t-1-11_bi-unit-count-0': 1,
+                'l-t-1-20_bi-gross-amount-0': 2391,
+                'l-t-1-20_bi-net-amount-0': 1928,
+                'i-t-1-4_bi-vat-percentage-0': 2400,
+                'i-t-1-4_bi-discount-percentage-0': 0,
+                's-t-1-255_buyer-external-id': os.environ.get('EXTERNALID'),
+                'l-t-1-20_saved-payment-method-id': saved_payment_id,
+            }
+            response = self._verifone_client.process_payment(params)
+            self.assertTrue('l-f-1-20_transaction-number' in response)
+            self.assertIsNotNone(response['l-f-1-20_transaction-number'])
 
     def test_015_list_transaction_numbers(self):
         """ Test to get transaction numbers for one order. """
-        response = self._verifone_client.list_transaction_numbers("1234")
-        self.assertTrue('l-f-1-20_transaction-number-0' in response)
+        if (self._test_requests):
+            response = self._verifone_client.list_transaction_numbers("1234")
+            self.assertTrue('l-f-1-20_transaction-number-0' in response)
 
     def test_016_get_payment_status(self):
         """ Test to get payment status """
-        response = self._verifone_client.list_transaction_numbers("1234")
-        transaction_id = response['l-f-1-20_transaction-number-0']
-        self.assertIsNotNone(transaction_id)
+        if (self._test_requests):
+            response = self._verifone_client.list_transaction_numbers("1234")
+            transaction_id = response['l-f-1-20_transaction-number-0']
+            self.assertIsNotNone(transaction_id)
 
-        params = {
-            's-f-1-30_payment-method-code': 'visa',
-            'l-f-1-20_transaction-number': transaction_id,
-        }
+            params = {
+                's-f-1-30_payment-method-code': 'visa',
+                'l-f-1-20_transaction-number': transaction_id,
+            }
 
-        response = self._verifone_client.get_payment_status(params)
-        self.assertTrue('s-f-1-30_payment-status-code' in response)
+            response = self._verifone_client.get_payment_status(params)
+            self.assertTrue('s-f-1-30_payment-status-code' in response)
 
     def test_017_refund_payment(self):
         """ Test to refund payment """
-        response = self._verifone_client.list_transaction_numbers("1234")
-        transaction_id = response['l-f-1-20_transaction-number-0']
-        self.assertIsNotNone(transaction_id)
+        if (self._test_requests):
+            response = self._verifone_client.list_transaction_numbers("1234")
+            transaction_id = response['l-f-1-20_transaction-number-0']
+            self.assertIsNotNone(transaction_id)
 
-        params = {
-            'l-f-1-20_refund-amount': 1,
-            's-f-1-30_payment-method-code': 'visa',
-            'l-f-1-20_transaction-number': transaction_id,
-        }
+            params = {
+                'l-f-1-20_refund-amount': 1,
+                's-f-1-30_payment-method-code': 'visa',
+                'l-f-1-20_transaction-number': transaction_id,
+            }
 
-        response = self._verifone_client.refund_payment(params)
-        self.assertTrue('l-f-1-20_transaction-number' in response)
+            response = self._verifone_client.refund_payment(params)
+            self.assertTrue('l-f-1-20_transaction-number' in response)
 
     def test_018_cancel_payment(self):
         """ Test to cancel payment. """
-        params = {
-            's-f-1-30_payment-method-code': 'visa',
-            'l-f-1-20_transaction-number': '123456',
-        }
-        with self.assertRaises(ValueError):
-            self._verifone_client.cancel_payment(params)
+        if (self._test_requests):
+            params = {
+                's-f-1-30_payment-method-code': 'visa',
+                'l-f-1-20_transaction-number': '123456',
+            }
+            with self.assertRaises(ValueError):
+                self._verifone_client.cancel_payment(params)
 
     def test_019_process_supplementary(self):
         """ Test to process supplementary. """
-        params = {
-            'l-f-1-20_original-transaction-number': '123456',
-            's-f-1-30_payment-method-code': 'visa',
-            'l-f-1-20_order-gross-amount': 500,
-        }
-        with self.assertRaises(ValueError):
-            self._verifone_client.process_supplementary(params)
+        if (self._test_requests):
+            params = {
+                'l-f-1-20_original-transaction-number': '123456',
+                's-f-1-30_payment-method-code': 'visa',
+                'l-f-1-20_order-gross-amount': 500,
+            }
+            with self.assertRaises(ValueError):
+                self._verifone_client.process_supplementary(params)
 
     def test_020_get_endpoint(self):
         """ Test for getting endpoints """
