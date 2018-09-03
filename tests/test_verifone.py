@@ -6,13 +6,17 @@
 
 import unittest
 import logging
-import http.client
 import os
 from datetime import datetime
 from verifone import verifone
 
+try:
+    import http.client as http_client
+except ImportError:
+    import httplib as http_client
+
 # logging
-http.client.HTTPConnection.debuglevel = 1
+http_client.HTTPConnection.debuglevel = 1
 logging.basicConfig()
 logging.getLogger().setLevel(logging.DEBUG)
 requests_log = logging.getLogger("requests.packages.urllib3")
@@ -94,19 +98,19 @@ class TestVerifone(unittest.TestCase):
 
     def test_006_is_available(self):
         """ Test connection to Verifone server """
-        if (self._test_requests == 1):
+        if (self._test_requests == "1"):
             response = self._verifone_client.is_available()
             self.assertTrue(response['i-f-1-1_availability'] == '2')
 
     def test_007_get_payment_methods(self):
         """ Test to get all available payment methods """
-        if (self._test_requests == 1):
+        if (self._test_requests == "1"):
             response = self._verifone_client.list_payment_methods()
             self.assertIsNotNone(response['s-t-1-30_payment-method-code-0'])
 
     def test_008_list_saved_payment_methods(self):
         """ Test to get saved payment methods """
-        if (self._test_requests == 1):
+        if (self._test_requests == "1"):
             params = {
                 's-f-1-30_buyer-first-name': 'Test',
                 's-f-1-30_buyer-last-name': 'Tester',
@@ -119,7 +123,7 @@ class TestVerifone(unittest.TestCase):
 
     def test_009_remove_saved_payment_method(self):
         """ Test to remove saved payment method when saved payment method is wrong """
-        if (self._test_requests == 1):
+        if (self._test_requests == "1"):
             response = self._verifone_client.remove_saved_payment_method(123456)
             self.assertEqual(response['l-t-1-10_removed-count'], '0')
 
@@ -171,7 +175,7 @@ class TestVerifone(unittest.TestCase):
 
     def test_011_generate_payment_link(self):
         """ Test to generate payment link """
-        if (self._test_requests == 1):
+        if (self._test_requests == "1"):
             params = {
                 'locale-f-2-5_payment-locale': 'fi_FI',
                 't-f-14-19_order-expiry-timestamp': '2018-10-02 09:14:12',
@@ -206,13 +210,13 @@ class TestVerifone(unittest.TestCase):
 
     def test_012_get_payment_link_status(self):
         """ Test to get payment link status. """
-        if (self._test_requests == 1):
+        if (self._test_requests == "1"):
             with self.assertRaises(ValueError):
                 self._verifone_client.get_payment_link_status(12345678)
 
     def test_013_reactivate_payment_link(self):
         """ Test to reactivate payment link. """
-        if (self._test_requests == 1):
+        if (self._test_requests == "1"):
             current_time = datetime.now()
             timestamp = current_time.strftime('%Y-%m-%d %H:%M:%S')
 
@@ -221,7 +225,7 @@ class TestVerifone(unittest.TestCase):
 
     def test_014_process_payment(self):
         """ Test to process payment """
-        if (self._test_requests == 1):
+        if (self._test_requests == "1"):
             params = {
                 's-f-1-30_buyer-first-name': 'Test',
                 's-f-1-30_buyer-last-name': 'Tester',
@@ -261,13 +265,13 @@ class TestVerifone(unittest.TestCase):
 
     def test_015_list_transaction_numbers(self):
         """ Test to get transaction numbers for one order. """
-        if (self._test_requests == 1):
+        if (self._test_requests == "1"):
             response = self._verifone_client.list_transaction_numbers("1234")
             self.assertTrue('l-f-1-20_transaction-number-0' in response)
 
     def test_016_get_payment_status(self):
         """ Test to get payment status """
-        if (self._test_requests == 1):
+        if (self._test_requests == "1"):
             response = self._verifone_client.list_transaction_numbers("1234")
             transaction_id = response['l-f-1-20_transaction-number-0']
             self.assertIsNotNone(transaction_id)
@@ -282,7 +286,7 @@ class TestVerifone(unittest.TestCase):
 
     def test_017_refund_payment(self):
         """ Test to refund payment """
-        if (self._test_requests == 1):
+        if (self._test_requests == "1"):
             response = self._verifone_client.list_transaction_numbers("1234")
             transaction_id = response['l-f-1-20_transaction-number-0']
             self.assertIsNotNone(transaction_id)
@@ -298,7 +302,7 @@ class TestVerifone(unittest.TestCase):
 
     def test_018_cancel_payment(self):
         """ Test to cancel payment. """
-        if (self._test_requests == 1):
+        if (self._test_requests == "1"):
             params = {
                 's-f-1-30_payment-method-code': 'visa',
                 'l-f-1-20_transaction-number': '123456',
@@ -308,7 +312,7 @@ class TestVerifone(unittest.TestCase):
 
     def test_019_process_supplementary(self):
         """ Test to process supplementary. """
-        if (self._test_requests == 1):
+        if (self._test_requests == "1"):
             params = {
                 'l-f-1-20_original-transaction-number': '123456',
                 's-f-1-30_payment-method-code': 'visa',
@@ -335,6 +339,7 @@ class TestVerifone(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             verifone_cl.test_mode = 3
+            
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
