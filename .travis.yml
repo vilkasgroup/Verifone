@@ -25,7 +25,7 @@ deploy:
     secure: PLEASE_REPLACE_ME
   on:
     tags: true
-    repo: jhsaraja/verifone
+    repo: vilkasgroup/verifone
     python: 3.6
 
 after_success:

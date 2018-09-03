@@ -17,19 +17,33 @@ requirements = [
     'pycryptodome>=3.6.6',
 ]
 
-setup_requirements = [ ]
+setup_requirements = [
+    # TODO(vilkasgroup): put setup requirements (distutils extensions, etc.) here
+]
 
-test_requirements = [ ]
+test_requirements = [
+    # TODO: put package test requirements here
+]
 
 setup(
+    name='verifone',
+    version='0.1.0',
+    description="Python package for Verifone",
+    long_description=readme + '\n\n' + history,
     author="Jaana Sarajärvi",
     author_email='jaana.sarajarvi@vilkas.fi',
+    url='https://github.com/vilkasgroup/Verifone',
+    packages=find_packages(include=['verifone']),
+    include_package_data=True,
+    install_requires=requirements,
+    license="MIT license",
+    zip_safe=False,
+    keywords='verifone',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
-        "Programming Language :: Python :: 2",
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
@@ -37,18 +51,7 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
     ],
-    description="Python package for Verifone",
-    install_requires=requirements,
-    license="MIT license",
-    long_description=readme + '\n\n' + history,
-    include_package_data=True,
-    keywords='verifone',
-    name='verifone',
-    packages=find_packages(include=['verifone']),
-    setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
-    url='https://github.com/vilkasgroup/Verifone',
-    version='0.1.0',
-    zip_safe=False,
+    setup_requires=setup_requirements,
 )
