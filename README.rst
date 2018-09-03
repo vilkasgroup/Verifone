@@ -17,8 +17,8 @@ Verifone
    :target: https://coveralls.io/github/vilkasgroup/Verifone?branch=master
    :alt: Coveralls status
 
-.. image:: https://pyup.io/repos/github/jhsaraja/verifone/shield.svg
-     :target: https://pyup.io/repos/github/jhsaraja/verifone/
+.. image:: https://pyup.io/repos/github/vilkasgroup/Verifone/shield.svg
+     :target: https://pyup.io/repos/github/vilkasgroup/Verifone/
      :alt: Updates
 
 
