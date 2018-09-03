@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # verifone documentation build configuration file, created by
-# sphinx-quickstart on Fri Jun  9 13:47:02 2017.
+# sphinx-quickstart on Fri Aug  31 13:47:02 2018.
 #
 # This file is execfile()d with the current directory set to its
 # containing dir.
@@ -13,21 +13,29 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
+import sys
+import os
+
 # If extensions (or modules to document with autodoc) are in another
 # directory, add these directories to sys.path here. If the directory is
 # relative to the documentation root, use os.path.abspath to make it
 # absolute, like shown here.
-#
-import os
-import sys
-sys.path.insert(0, os.path.abspath('..'))
+sys.path.insert(0, os.path.abspath('../'))
+
+# Get the project root dir, which is the parent dir of this
+cwd = os.getcwd()
+project_root = os.path.dirname(cwd)
+
+# Insert the project root dir as the first element in the PYTHONPATH.
+# This lets us ensure that the source package is imported, and that its
+# version is used.
+sys.path.insert(0, project_root)
 
 import verifone
 
 # -- General configuration ---------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
-#
 # needs_sphinx = '1.0'
 
 # Add any Sphinx extension module names here, as strings. They can be
@@ -42,6 +50,9 @@ templates_path = ['_templates']
 #
 # source_suffix = ['.rst', '.md']
 source_suffix = '.rst'
+
+# The encoding of source files.
+#source_encoding = 'utf-8-sig'
 
 # The master toctree document.
 master_doc = 'index'
@@ -83,13 +94,11 @@ todo_include_todos = False
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-#
-html_theme = 'alabaster'
+html_theme = 'default'
 
 # Theme options are theme-specific and customize the look and feel of a
 # theme further.  For a list of options available for each theme, see the
 # documentation.
-#
 # html_theme_options = {}
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -108,15 +117,12 @@ htmlhelp_basename = 'verifonedoc'
 
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
-    #
     # 'papersize': 'letterpaper',
 
     # The font size ('10pt', '11pt' or '12pt').
-    #
     # 'pointsize': '10pt',
 
     # Additional stuff for the LaTeX preamble.
-    #
     # 'preamble': '',
 
     # Latex figure (float) alignment

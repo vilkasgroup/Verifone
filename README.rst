@@ -6,8 +6,8 @@ Verifone
 .. image:: https://img.shields.io/pypi/v/verifone.svg
         :target: https://pypi.python.org/pypi/verifone
 
-.. image:: https://img.shields.io/travis/jhsaraja/verifone.svg
-        :target: https://travis-ci.org/jhsaraja/verifone
+.. image:: https://img.shields.io/travis/vilkasgroup/Verifone.svg
+        :target: https://travis-ci.org/vilkasgroup/Verifone
 
 .. image:: https://readthedocs.org/projects/verifone/badge/?version=latest
         :target: https://verifone.readthedocs.io/en/latest/?badge=latest
