@@ -172,6 +172,8 @@ class TestVerifone(unittest.TestCase):
         self.assertIsNotNone(data['s-t-256-256_signature-one'])
         self.assertTrue('s-t-256-256_signature-two' in data)
         self.assertIsNotNone(data['s-t-256-256_signature-two'])
+        self.assertTrue('PostUrl' in data)
+        self.assertIsNotNone(data['PostUrl'])
 
     def test_011_generate_payment_link(self):
         """ Test to generate payment link """
@@ -339,6 +341,14 @@ class TestVerifone(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             verifone_cl.test_mode = 3
+
+    def test_022_get_endpoint(self):
+        """ Test for getting post urls """
+        verifone_cl = verifone.Verifone('test_apikey', '1234', 'Test', 'IntegrationTest', '6.0.37', 'eur')
+        self.assertEqual(verifone_cl.posturl, 'https://epayment1.point.fi/pw/payment')
+
+        verifone_cl.test_mode = 1
+        self.assertEqual(verifone_cl.posturl, 'https://epayment.test.point.fi/pw/payment')
             
 
 if __name__ == '__main__':

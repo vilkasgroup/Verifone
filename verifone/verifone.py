@@ -61,6 +61,16 @@ class Verifone(object):
         if self._test_mode:
             return 'https://epayment.test.point.fi/pw/serverinterface'
         return 'https://epayment1.point.fi/pw/serverinterface'
+
+    @property
+    def posturl(self):
+        """ Return post url.
+
+        :return: post url, string
+        """
+        if self._test_mode:
+            return 'https://epayment.test.point.fi/pw/payment'
+        return 'https://epayment1.point.fi/pw/payment'
     
     @property
     def test_mode(self):
@@ -588,6 +598,9 @@ class Verifone(object):
             values['s-t-256-256_signature-one'] = signature
             values['s-t-256-256_signature-two'] = signature2
             logs.debug(values)
+
+            # Return also post url
+            values['PostUrl'] = self.posturl
 
             return values
 
