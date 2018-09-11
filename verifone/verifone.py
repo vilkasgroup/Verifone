@@ -599,9 +599,6 @@ class Verifone(object):
             values['s-t-256-256_signature-two'] = signature2
             logs.debug(values)
 
-            # Return also post url
-            values['PostUrl'] = self.posturl
-
             return values
 
     def send_request(self, options):
@@ -775,7 +772,7 @@ class Verifone(object):
             - vat: tax percentage with two decimal, float or integer
             - amount_gross: item gross amount including tax and discount with two decimal, float or integer
             - amount_net: item net amount calculated from unit cost times unit count with two decimal, float or integer
-            - unit_cost_gross: unit cost with two decimal, with discount and tax
+            - unit_cost_gross: unit cost with two decimal, with discount and tax 
             - unit_cost: unit cost with two decimal and without tax and discounts, this must be filled if  
                 unit gross cost is not filled, otherwise must not be used (optional)
         :return: product data, dictionary
@@ -790,11 +787,17 @@ class Verifone(object):
             discount = data[i]['discount']
             product_data['s-t-1-30_bi-name-'+ str(i)] = data[i]['name']
             product_data['i-t-1-11_bi-unit-count-'+ str(i)] = data[i]['pieces']
-            product_data['l-t-1-20_bi-gross-amount-'+ str(i)] = self.format_to_integer(data[i]['amount_gross'])
-            product_data['l-t-1-20_bi-net-amount-'+ str(i)] = self.format_to_integer(data[i]['amount_net'])
-            product_data['l-t-1-20_bi-unit-gross-cost-'+ str(i)] = self.format_to_integer(data[i]['unit_cost_gross'])
             product_data['i-t-1-4_bi-vat-percentage-'+ str(i)] = self.format_to_integer(data[i]['vat'])
             product_data['i-t-1-4_bi-discount-percentage-'+ str(i)] = self.format_to_integer(discount)
+
+            if 'amount_net' in data[i]:
+                product_data['l-t-1-20_bi-net-amount-'+ str(i)] = self.format_to_integer(data[i]['amount_net'])
+
+            if 'amount_gross' in data[i]:
+                product_data['l-t-1-20_bi-gross-amount-'+ str(i)] = self.format_to_integer(data[i]['amount_gross'])
+
+            if 'unit_cost_gross' in data[i]:
+                product_data['l-t-1-20_bi-unit-gross-cost-'+ str(i)] = self.format_to_integer(data[i]['unit_cost_gross'])
         
             if 'unit_cost' in data[i]:
                 product_data['l-t-1-20_bi-unit-cost-'+ str(i)] = self.format_to_integer(data[i]['unit_cost'])
