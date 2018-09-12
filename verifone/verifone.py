@@ -545,9 +545,6 @@ class Verifone(object):
                 's-f-1-36_order-number': data['order_number'],
                 'i-f-1-3_order-currency-code': self.currency,
                 'i-t-1-4_order-vat-percentage': '', # set empty because there can be multiple VAT percentages in one payment
-                'l-f-1-20_order-gross-amount': self.format_to_integer(data['amount_gross']),
-                'l-f-1-20_order-net-amount': self.format_to_integer(data['amount_net']),
-                'l-f-1-20_order-vat-amount': self.format_to_integer(data['vat_amount']),
                 's-f-1-30_buyer-first-name': self.get_substring(data['first_name'], 30),
                 's-f-1-30_buyer-last-name': self.get_substring(data['last_name'], 30),
                 's-f-1-100_buyer-email-address': self.get_substring(data['email'], 100),
@@ -563,8 +560,17 @@ class Verifone(object):
                 'i-f-1-11_interface-version': self._interface_version,
                 'i-t-1-1_skip-confirmation-page': skip_confirmation, 
             }
-            
-            # Check optional optional fields, max length is 30 characters
+
+            if 'amount_gross' in data:
+                values['l-f-1-20_order-gross-amount'] = self.format_to_integer(data['amount_gross'])
+
+            if 'amount_net' in data:
+                values['l-f-1-20_order-net-amount'] = self.format_to_integer(data['amount_net'])
+
+            if 'vat_amount' in data:
+                values['l-f-1-20_order-vat-amount'] = self.format_to_integer(data['vat_amount'])
+        
+            # Check optional fields, max length is 30 characters
             extra_fields = {
                 'phone': 's-t-1-30_buyer-phone-number', 
                 'address': 's-t-1-30_delivery-address-line-one', 
@@ -784,7 +790,7 @@ class Verifone(object):
                 discount = data[i]['discount']
             else:
                 discount = 0
-            discount = data[i]['discount']
+            
             product_data['s-t-1-30_bi-name-'+ str(i)] = data[i]['name']
             product_data['i-t-1-11_bi-unit-count-'+ str(i)] = data[i]['pieces']
             product_data['i-t-1-4_bi-vat-percentage-'+ str(i)] = self.format_to_integer(data[i]['vat'])

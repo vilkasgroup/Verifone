@@ -173,7 +173,38 @@ class TestVerifone(unittest.TestCase):
         self.assertTrue('s-t-256-256_signature-two' in data)
         self.assertIsNotNone(data['s-t-256-256_signature-two'])
 
-    def test_011_generate_payment_link(self):
+        self.assertEqual(data['l-f-1-20_order-gross-amount'], 151)
+        self.assertEqual(data['l-f-1-20_order-net-amount'], 122)
+        self.assertEqual(data['l-f-1-20_order-vat-amount'], 29)
+       
+    def test_011_generate_payment_data(self):
+        """ Test to generate payment data when all data is not defined """
+        params = {
+            'order_number': '58459',
+            'locale': 'fi_FI',
+            'first_name': 'Test',
+            'last_name': 'Tester',
+            'email': 'test@test.test',
+            'cancel_url': 'https://cancel.url',
+            'error_url': 'https://error.url',
+            'expired_url': 'https://expired.url',
+            'rejected_url': 'https://rejected.url',
+            'success_url': 'https://success.url',
+            'success_url_server': 'https://server.success.url',
+            'products': [
+                {
+                    'name': 'er_7142303001',
+                    'pieces': 1,
+                    'vat': 24.00,
+                },
+            ]
+        }
+
+        data = self._verifone_client.generate_payment_data(params)
+        self.assertTrue('s-t-1-30_style-code' in data)
+        self.assertTrue('i-t-1-1_skip-confirmation-page' in data)
+
+    def test_012_generate_payment_link(self):
         """ Test to generate payment link """
         if (self._test_requests == "1"):
             params = {
@@ -208,13 +239,13 @@ class TestVerifone(unittest.TestCase):
             with self.assertRaises(ValueError):
                 self._verifone_client.generate_payment_link(params)
 
-    def test_012_get_payment_link_status(self):
+    def test_013_get_payment_link_status(self):
         """ Test to get payment link status. """
         if (self._test_requests == "1"):
             with self.assertRaises(ValueError):
                 self._verifone_client.get_payment_link_status(12345678)
 
-    def test_013_reactivate_payment_link(self):
+    def test_014_reactivate_payment_link(self):
         """ Test to reactivate payment link. """
         if (self._test_requests == "1"):
             current_time = datetime.now()
@@ -223,7 +254,7 @@ class TestVerifone(unittest.TestCase):
             with self.assertRaises(ValueError):
                 self._verifone_client.reactivate_payment_link(12345678, timestamp)
 
-    def test_014_process_payment(self):
+    def test_015_process_payment(self):
         """ Test to process payment """
         if (self._test_requests == "1"):
             params = {
@@ -263,13 +294,13 @@ class TestVerifone(unittest.TestCase):
             self.assertTrue('l-f-1-20_transaction-number' in response)
             self.assertIsNotNone(response['l-f-1-20_transaction-number'])
 
-    def test_015_list_transaction_numbers(self):
+    def test_016_list_transaction_numbers(self):
         """ Test to get transaction numbers for one order. """
         if (self._test_requests == "1"):
             response = self._verifone_client.list_transaction_numbers("1234")
             self.assertTrue('l-f-1-20_transaction-number-0' in response)
 
-    def test_016_get_payment_status(self):
+    def test_017_get_payment_status(self):
         """ Test to get payment status """
         if (self._test_requests == "1"):
             response = self._verifone_client.list_transaction_numbers("1234")
@@ -284,7 +315,7 @@ class TestVerifone(unittest.TestCase):
             response = self._verifone_client.get_payment_status(params)
             self.assertTrue('s-f-1-30_payment-status-code' in response)
 
-    def test_017_refund_payment(self):
+    def test_018_refund_payment(self):
         """ Test to refund payment """
         if (self._test_requests == "1"):
             response = self._verifone_client.list_transaction_numbers("1234")
@@ -300,7 +331,7 @@ class TestVerifone(unittest.TestCase):
             response = self._verifone_client.refund_payment(params)
             self.assertTrue('l-f-1-20_transaction-number' in response)
 
-    def test_018_cancel_payment(self):
+    def test_019_cancel_payment(self):
         """ Test to cancel payment. """
         if (self._test_requests == "1"):
             params = {
@@ -310,7 +341,7 @@ class TestVerifone(unittest.TestCase):
             with self.assertRaises(ValueError):
                 self._verifone_client.cancel_payment(params)
 
-    def test_019_process_supplementary(self):
+    def test_020_process_supplementary(self):
         """ Test to process supplementary. """
         if (self._test_requests == "1"):
             params = {
@@ -321,7 +352,7 @@ class TestVerifone(unittest.TestCase):
             with self.assertRaises(ValueError):
                 self._verifone_client.process_supplementary(params)
 
-    def test_020_get_endpoint(self):
+    def test_021_get_endpoint(self):
         """ Test for getting endpoints """
         verifone_cl = verifone.Verifone('test_apikey', '1234', 'Test', 'IntegrationTest', '6.0.37', 'eur')
         self.assertEqual(verifone_cl.endpoint, 'https://epayment1.point.fi/pw/serverinterface')
@@ -329,7 +360,7 @@ class TestVerifone(unittest.TestCase):
         verifone_cl.test_mode = 1
         self.assertEqual(verifone_cl.endpoint, 'https://epayment.test.point.fi/pw/serverinterface')
 
-    def test_021_save_test_mode(self):
+    def test_022_save_test_mode(self):
         """ Test for save test mode """
         verifone_cl = verifone.Verifone('test_apikey', '1234', 'Test', 'IntegrationTest', '6.0.37', 'eur')
         self.assertEqual(verifone_cl.test_mode, 0)
@@ -340,7 +371,7 @@ class TestVerifone(unittest.TestCase):
         with self.assertRaises(ValueError):
             verifone_cl.test_mode = 3
 
-    def test_022_get_endpoint(self):
+    def test_023_get_endpoint(self):
         """ Test for getting post urls """
         verifone_cl = verifone.Verifone('test_apikey', '1234', 'Test', 'IntegrationTest', '6.0.37', 'eur')
         self.assertEqual(verifone_cl.posturl, 'https://epayment1.point.fi/pw/payment')
@@ -348,12 +379,12 @@ class TestVerifone(unittest.TestCase):
         verifone_cl.test_mode = 1
         self.assertEqual(verifone_cl.posturl, 'https://epayment.test.point.fi/pw/payment')
 
-    def test_023_build_product_data(self):
+    def test_024_build_product_data(self):
         """ Test building product data """
         params = [{
             'name': 'er_7142303001',
             'pieces': 1,
-            'discount': 0,
+            'discount': 10,
             'vat': 24.00,
             'amount_net': 1.22,
             'unit_cost_gross': 1.51,
@@ -361,7 +392,18 @@ class TestVerifone(unittest.TestCase):
         response = self._verifone_client.build_product_data(params)
         self.assertTrue('l-t-1-20_bi-unit-gross-cost-0' in response)
         self.assertTrue('l-t-1-20_bi-net-amount-0' in response)
-            
+        self.assertEqual(response['i-t-1-4_bi-discount-percentage-0'], 1000)
+
+        params = [{
+            'name': 'er_7142303001',
+            'pieces': 1,
+            'vat': 24.00,
+        }]
+        response = self._verifone_client.build_product_data(params)
+        self.assertEqual(response['i-t-1-4_bi-discount-percentage-0'], 0)
+        self.assertEqual(response['i-t-1-4_bi-vat-percentage-0'], 2400)
+        self.assertEqual(response['i-t-1-11_bi-unit-count-0'], 1)
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
