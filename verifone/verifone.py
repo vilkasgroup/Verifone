@@ -419,7 +419,7 @@ class Verifone(object):
             - s-t-1-36_payment-link-number: created payment-link-number
         """
         if 'i-t-1-3_delivery-address-country-code' in data and data['i-t-1-3_delivery-address-country-code'].isalpha():
-            country_data = pycountry.countries.get(alpha_2 = data['i-t-1-3_delivery-address-country-code'])
+            country_data = pycountry.countries.get(alpha_2 = data['i-t-1-3_delivery-address-country-code'].upper())
             data['i-t-1-3_delivery-address-country-code'] = country_data.numeric
 
         options = {

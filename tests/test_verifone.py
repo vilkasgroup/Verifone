@@ -191,6 +191,8 @@ class TestVerifone(unittest.TestCase):
             'rejected_url': 'https://rejected.url',
             'success_url': 'https://success.url',
             'success_url_server': 'https://server.success.url',
+            'skip_confirmation': 1,
+            'country': '246',
             'products': [
                 {
                     'name': 'er_7142303001',
@@ -203,6 +205,8 @@ class TestVerifone(unittest.TestCase):
         data = self._verifone_client.generate_payment_data(params)
         self.assertTrue('s-t-1-30_style-code' in data)
         self.assertTrue('i-t-1-1_skip-confirmation-page' in data)
+        self.assertEqual(data['i-t-1-1_skip-confirmation-page'], 1)
+        self.assertEqual(data['i-t-1-3_delivery-address-country-code'], '246')
 
     def test_012_generate_payment_link(self):
         """ Test to generate payment link """
@@ -227,7 +231,7 @@ class TestVerifone(unittest.TestCase):
                 's-t-1-30_delivery-address-line-one': "Test Street 3",
                 's-t-1-30_delivery-address-city': "Tampere",
                 's-t-1-30_delivery-address-postal-code': "33210",
-                'i-t-1-3_delivery-address-country-code': '246',
+                'i-t-1-3_delivery-address-country-code': 'fi',
                 's-t-1-30_bi-name-0': 'Test Product',  # can be 0-50 items
                 'l-t-1-20_bi-unit-gross-cost-0': '7602',
                 'i-t-1-11_bi-unit-count-0': '1',
@@ -370,6 +374,9 @@ class TestVerifone(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             verifone_cl.test_mode = 3
+        
+        verifone_cl.test_mode = None
+        self.assertEqual(verifone_cl.test_mode, 0)
 
     def test_023_get_endpoint(self):
         """ Test for getting post urls """
