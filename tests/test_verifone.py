@@ -176,7 +176,7 @@ class TestVerifone(unittest.TestCase):
         self.assertEqual(data['l-f-1-20_order-gross-amount'], 151)
         self.assertEqual(data['l-f-1-20_order-net-amount'], 122)
         self.assertEqual(data['l-f-1-20_order-vat-amount'], 29)
-       
+
     def test_011_generate_payment_data(self):
         """ Test to generate payment data when all data is not defined """
         params = {
@@ -374,7 +374,7 @@ class TestVerifone(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             verifone_cl.test_mode = 3
-        
+
         verifone_cl.test_mode = None
         self.assertEqual(verifone_cl.test_mode, 0)
 
@@ -410,6 +410,27 @@ class TestVerifone(unittest.TestCase):
         self.assertEqual(response['i-t-1-4_bi-discount-percentage-0'], 0)
         self.assertEqual(response['i-t-1-4_bi-vat-percentage-0'], 2400)
         self.assertEqual(response['i-t-1-11_bi-unit-count-0'], 1)
+
+    def test_025_verify_response(self):
+        """ Test to verify response with extra data. """
+        response = {
+            'i-f-1-11_interface-version': '5',
+            'l-f-1-20_request-id': '2018102613094825567',
+            'l-f-1-20_response-id': '2018102613094825567',
+            'l-f-1-20_transaction-number': '2110929913',
+            's-f-1-10_software-version': '1.74.1.238',
+            's-f-1-30_operation': 'refund-payment',
+            's-f-1-30_payment-method-code': 'visa',
+            's-t-256-256_signature-one': '79C10BC83D94746C2A0859645EB476A73DBE2653C6B24C403CEB9017A759A330F7488AFF549E5AA861E8B6A8962B752B5066651F9C530277ABCAC04C25731EA17B220A638567403035B4A82D6C4CB96DE3F68DF0A089761030CF6766D7811B6895064C90DEC59A796BB3531D5F7C4C3E60B052D3642D35513D29EB89919F8434',
+            's-t-256-256_signature-two': 'ACB93737CB1DB0D0C7DDCA62DFC921095D2465A751F39F95A9E660B423A4DBF83C7C50914E803019B9884388D336340E18D028F4D58B4C0320EBBC069D0F1402B028ECCB04AD615340670C200062A4C7BDBD2293C44B091E6379B253866BA751BACA133BA58A89125E58DF92E7ABE0E548521565DE05DBAFE5A487F9C9E451B7',
+            't-f-14-19_response-timestamp': '2018-10-26 10:09:48',
+            's-t-1-40_shop-order__phase': 'Takaisin tilaukseen'
+        }
+
+        print(response)
+        self._verifone_client.verify_response(response)
+
+
 
 
 if __name__ == '__main__':

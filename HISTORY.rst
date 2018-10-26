@@ -2,6 +2,11 @@
 History
 =======
 
+0.1.3 (2018-10-26)
+------------------
+
+* Remove s-t-1-40_shop-order__phase from signature verification.
+
 0.1.2 (2018-09-12)
 ------------------
 
