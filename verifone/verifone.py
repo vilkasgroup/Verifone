@@ -27,12 +27,12 @@ class Verifone(object):
      - pycountry
      - requests
 
-    :param agreement_code: merchant agreement code, string with length of 1-36 characters 
+    :param agreement_code: merchant agreement code, string with length of 1-36 characters
     :param RSA_private_key: RSA private key, string
     :param RSA_verifone_public_key: Verifone's RSA public key, string
-    :param currency: currency code with three letters, default is EUR, string  
-    :param software_name: name of the web shop software, string with length of 1-30 characters  
-    :param version: version of the web shop software, string with length of 1-10 characters   
+    :param currency: currency code with three letters, default is EUR, string
+    :param software_name: name of the web shop software, string with length of 1-30 characters
+    :param version: version of the web shop software, string with length of 1-10 characters
     :param interface_version: version of the payment interface, string with length of 1-11 numeric characters
     :param test_mode: 1 if use test server, default is 0, boolean
     :rtype: object
@@ -51,7 +51,7 @@ class Verifone(object):
         self._interface_version = interface_version
         self._currency = currency
         self._test_mode = test_mode
-    
+
     @property
     def endpoint(self):
         """ Return endpoint.
@@ -71,7 +71,7 @@ class Verifone(object):
         if self._test_mode:
             return 'https://epayment.test.point.fi/pw/payment'
         return 'https://epayment1.point.fi/pw/payment'
-    
+
     @property
     def test_mode(self):
         """ Return 1 if client is in test mode.
@@ -79,7 +79,7 @@ class Verifone(object):
         :return: 1 if is in test mode, integer
         """
         return self._test_mode
-    
+
     @test_mode.setter
     def test_mode(self, value):
         """ Method saves a new test_mode value.
@@ -102,7 +102,7 @@ class Verifone(object):
         :return: currency, numeric ISO 4217 currency code
         """
         try:
-            currency_data = pycountry.currencies.get(alpha_3 = self._currency) 
+            currency_data = pycountry.currencies.get(alpha_3 = self._currency)
         except KeyError:
             logs.debug("Wrong currency saved: " + self._currency)
             raise ValueError("Incorrect currency")
@@ -127,14 +127,14 @@ class Verifone(object):
             raise ValueError("Only letters are allowed")
 
         value = value.upper()
-        
+
         try:
-            pycountry.currencies.get(alpha_3 = value) 
+            pycountry.currencies.get(alpha_3 = value)
         except:
             raise ValueError("Incorrect currency")
 
         self._currency = value
-    
+
     def check_currency(self, currency):
         """ Method checks that currency is a valid currency code. If not then
         default currency code is used.
@@ -149,7 +149,7 @@ class Verifone(object):
         currency = currency.upper()
 
         try:
-            pycountry.currencies.get(alpha_3 = currency) 
+            pycountry.currencies.get(alpha_3 = currency)
         except KeyError:
             logs.debug("Default currency is used instead of " + currency)
             currency = self._default_currency
@@ -158,7 +158,7 @@ class Verifone(object):
 
     def is_available(self):
         """ Method can be used to test connectivity, signatures and requesting availability status of server interface.
-        
+
         :return: response from Verifone, dictionary
             - i-f-1-1_availability: 0 = No access to Server Interface has been granted by Verifone
                                     1 = Express level access to Server Interface
@@ -185,7 +185,7 @@ class Verifone(object):
         }
 
         return self.send_request(options)
-    
+
     def cancel_payment(self, data):
         """ Method cancels the payment
 
@@ -240,7 +240,7 @@ class Verifone(object):
 
         :param payment_id: payment method id, integer
         :return: status for removing, dictionary
-            - l-t-1-10_removed-count: 0 = Payment method not removed, 
+            - l-t-1-10_removed-count: 0 = Payment method not removed,
                                       1 = Payment method removed
         """
         options = {
@@ -257,7 +257,7 @@ class Verifone(object):
             - l-f-1-20_refund-amount: amount to refund, integer
             - s-f-1-30_payment-method-code: the used payment method code, string
             - l-f-1-20_transaction-number: transaction number identifying the payment transaction, string
-            - s-t-1-36_order-note: note for the payment, 1-36 characters (optional) 
+            - s-t-1-36_order-note: note for the payment, 1-36 characters (optional)
             - s-t-1-1024_dynamic-feedback: list of parameters to be added to response if available (optional)
         :return: status for refunding, dictionary
         """
@@ -271,7 +271,7 @@ class Verifone(object):
 
         return self.send_request(options)
 
-    def process_payment(self, data):  
+    def process_payment(self, data):
         """ Method sends payment data to Verifone.
 
         :param data: data added to payment request, dictionary
@@ -299,7 +299,7 @@ class Verifone(object):
             - i-t-1-1_deferred-payment: is payment deferred payment, integer (optional)
                 0: Not deferred payment
                 1: Deferred payment
-            - s-f-1-30_payment-method-code: used payment method, string 
+            - s-f-1-30_payment-method-code: used payment method, string
             - 0-50 basket items are supported
         :return: payment information returned from Verifone, dictionary
         """
@@ -326,7 +326,7 @@ class Verifone(object):
 
         return self.send_request(options)
 
-    def process_supplementary(self, data):  
+    def process_supplementary(self, data):
         """ Method trigger process supplementary.
 
         :param data: data added request, dictionary
@@ -382,7 +382,7 @@ class Verifone(object):
 
         return self.send_request(options)
 
-    def generate_payment_link(self, data):  
+    def generate_payment_link(self, data):
         """ Method generates payment link.
 
         :param data: parameters for request, dictionary
@@ -432,7 +432,7 @@ class Verifone(object):
 
         return self.send_request(options)
 
-    def get_payment_link_status(self, link_number):  
+    def get_payment_link_status(self, link_number):
         """ Method get payment link status.
 
         :param link_number: payment link number with 1-36 characters
@@ -449,7 +449,7 @@ class Verifone(object):
 
         return self.send_request(options)
 
-    def reactivate_payment_link(self, link_number, expiry_date):  
+    def reactivate_payment_link(self, link_number, expiry_date):
         """ Method reactivates payment link or changes the expiry date. Note that Verifone sends an email to the payer.
 
         :param link_number: payment link number with 1-36 characters
@@ -484,7 +484,7 @@ class Verifone(object):
             - city: city of the delivery address, max length is 30 character (optional)
             - postal_code: postal code of the delivery address, max length is 30 character (optional)
             - country: country of the delivery address, with 2 letters or numeric ISO 3166 country code (optional)
-            - style: code for the style sheet used in payment page, max length is 30 character (optional) 
+            - style: code for the style sheet used in payment page, max length is 30 character (optional)
             - cancel_url: return URL if payment is cancelled, max length is 256 characters
             - error_url: return URL after error, max length is 256 characters
             - expired_url: return URL after expired situation, max length is 256 characters
@@ -507,11 +507,11 @@ class Verifone(object):
                 - amount_gross: item gross amount including tax and discount with two decimal, float or integer
                 - amount_net: item net amount calculated from unit cost times unit count with two decimal, float or integer
                 - unit_cost_gross: unit cost with two decimal, with discount and tax
-                - unit_cost: unit cost with two decimal and without tax and discounts, this must be filled if  
+                - unit_cost: unit cost with two decimal and without tax and discounts, this must be filled if
                     unit gross cost is not filled, otherwise must not be used (optional)
             - payment_timestamp: the payment start time, format is yyyy-MM-dd HH:mm:ss (optional)
             - order_timestamp: the orders time from web shop point of view, format is yyyy-MM-dd HH:mm:ss (optional)
-                      
+
         :return: generated payment data, dictionary
         """
         if data:
@@ -523,24 +523,24 @@ class Verifone(object):
 
             if not 'order_timestamp' in data:
                 data['order_timestamp'] = timestamp
-                    
+
             payment_token = self.generate_token(data['order_number'], data['payment_timestamp'])
-         
+
             if 'style' in data:
                 style_code = data['style']
             else:
                 style_code = ''
-            
+
             if 'skip_confirmation' in data:
                 skip_confirmation = data['skip_confirmation']
             else:
                 skip_confirmation = 0
-                    
+
             values = {
-                's-f-32-32_payment-token': payment_token, 
+                's-f-32-32_payment-token': payment_token,
                 'locale-f-2-5_payment-locale': data['locale'],
                 't-f-14-19_payment-timestamp': data['payment_timestamp'],
-                't-f-14-19_order-timestamp': data['order_timestamp'],  
+                't-f-14-19_order-timestamp': data['order_timestamp'],
                 's-f-1-36_merchant-agreement-code': self._agreement_code,
                 's-f-1-36_order-number': data['order_number'],
                 'i-f-1-3_order-currency-code': self.currency,
@@ -558,7 +558,7 @@ class Verifone(object):
                 's-f-1-30_software': self._software_name,
                 's-f-1-10_software-version': self._version,
                 'i-f-1-11_interface-version': self._interface_version,
-                'i-t-1-1_skip-confirmation-page': skip_confirmation, 
+                'i-t-1-1_skip-confirmation-page': skip_confirmation,
             }
 
             if 'amount_gross' in data:
@@ -569,14 +569,14 @@ class Verifone(object):
 
             if 'vat_amount' in data:
                 values['l-f-1-20_order-vat-amount'] = self.format_to_integer(data['vat_amount'])
-        
+
             # Check optional fields, max length is 30 characters
             extra_fields = {
-                'phone': 's-t-1-30_buyer-phone-number', 
-                'address': 's-t-1-30_delivery-address-line-one', 
+                'phone': 's-t-1-30_buyer-phone-number',
+                'address': 's-t-1-30_delivery-address-line-one',
                 'address2': 's-t-1-30_delivery-address-line-two',
-                'address3': 's-t-1-30_delivery-address-line-three', 
-                'city': 's-t-1-30_delivery-address-city', 
+                'address3': 's-t-1-30_delivery-address-line-three',
+                'city': 's-t-1-30_delivery-address-city',
                 'postal_code': 's-t-1-30_delivery-address-postal-code',
                 'note': 's-t-1-36_order-note',
                 'customer_id': 's-t-1-255_buyer-external-id',
@@ -612,12 +612,12 @@ class Verifone(object):
 
         :param options: options for the request, dictionary
         :return: response from Verifone, dictionary
-        """        
+        """
         current_time = datetime.now()
         timestamp = current_time.strftime('%Y-%m-%d %H:%M:%S')
         request_id = str(current_time.strftime('%Y%m%d%H%M%S'))+str(randrange(99999))
 
-        data = {  
+        data = {
             "l-f-1-20_request-id": request_id,
             "t-f-14-19_request-timestamp": timestamp,
             "s-f-1-36_merchant-agreement-code": self._agreement_code,
@@ -635,7 +635,7 @@ class Verifone(object):
         data['s-t-256-256_signature-one'] = signature
         data['s-t-256-256_signature-two'] = signature2
         logs.debug(data)
-      
+
         headers = {
             'Content-Type': 'application/x-www-form-urlencoded',
         }
@@ -643,23 +643,23 @@ class Verifone(object):
         url = self.endpoint
         logs.debug('URL: ' + url)
 
-        response = requests.post(url, headers=headers, data=data)   
+        response = requests.post(url, headers=headers, data=data)
         logs.debug(response)
         logs.debug(response.content)
 
-        if response.status_code != 200: 
+        if response.status_code != 200:
             raise ConnectionError(str(response.content))
         elif not response.content:
             raise ValueError("No content returned")
 
         parsed_response = self.parse_response(response.content)
-        
+
         if 's-f-1-30_error-message' in parsed_response:
             raise ValueError(parsed_response['s-f-1-30_error-message'])
 
-        self.verify_response(parsed_response)  
+        self.verify_response(parsed_response)
 
-        return parsed_response     
+        return parsed_response
 
     def generate_signature(self, data, signature_type):
         """ Method generates digital signature from the given values.
@@ -673,7 +673,7 @@ class Verifone(object):
         plaintext =  self.get_plaintext(data)
 
         digest = ''
-        
+
         if signature_type == 'SHA512':
             digest = SHA512.new(plaintext)
         elif signature_type == 'SHA1':
@@ -685,7 +685,7 @@ class Verifone(object):
         signature = signer.sign(digest)
         hex_signature = binascii.hexlify(signature)
 
-        return hex_signature.upper() 
+        return hex_signature.upper()
 
     def get_plaintext(self, data):
         """ Method creates plaintext from dictionary.
@@ -694,18 +694,18 @@ class Verifone(object):
         :param data: data for the request, dictionary
         :return: plain text, string
         """
-        name_key_pairs = [] 
+        name_key_pairs = []
 
         # needed format is "key=value"
         for key, value in (sorted(data.items())):
             name_key_pairs.append(key + "=" + str(value))
-        
+
         logs.debug(name_key_pairs)
 
         plaintext =  ';'.join(name_key_pairs) + ';'
         plaintext = plaintext.encode('utf-8')
-        logs.debug("Plaintext for signature: " + str(plaintext))  
-        
+        logs.debug("Plaintext for signature: " + str(plaintext))
+
         return plaintext
 
     def parse_response(self, content):
@@ -723,21 +723,21 @@ class Verifone(object):
             key, value = param.split('=')
             value = urllib.parse.unquote_plus(value) # for example times are in format: 2018-08-03+06%3A59%3A52
             result[key] = value
-        
+
         logs.debug(result)
         return result
 
     def generate_token(self, order_no, payment_timestamp):
-        """ Method generates token for the payment.  
+        """ Method generates token for the payment.
 
         :param order_no: order number, string
         :param payment_timestamp: payment time stamp, string
         :return: generated token, string
         """
-        elements = (self._agreement_code, order_no, payment_timestamp) 
+        elements = (self._agreement_code, order_no, payment_timestamp)
         plaintext = ';'.join(elements)
         logs.debug(plaintext)
-        
+
         plaintext = plaintext.encode('utf-8')
         token = SHA256.new(plaintext)
         token = token.hexdigest()
@@ -778,19 +778,19 @@ class Verifone(object):
             - vat: tax percentage with two decimal, float or integer
             - amount_gross: item gross amount including tax and discount with two decimal, float or integer
             - amount_net: item net amount calculated from unit cost times unit count with two decimal, float or integer
-            - unit_cost_gross: unit cost with two decimal, with discount and tax 
-            - unit_cost: unit cost with two decimal and without tax and discounts, this must be filled if  
+            - unit_cost_gross: unit cost with two decimal, with discount and tax
+            - unit_cost: unit cost with two decimal and without tax and discounts, this must be filled if
                 unit gross cost is not filled, otherwise must not be used (optional)
         :return: product data, dictionary
         """
         product_data = {}
-        
+
         for i in range(len(data)):
             if 'discount' in data[i]:
                 discount = data[i]['discount']
             else:
                 discount = 0
-            
+
             product_data['s-t-1-30_bi-name-'+ str(i)] = data[i]['name']
             product_data['i-t-1-11_bi-unit-count-'+ str(i)] = data[i]['pieces']
             product_data['i-t-1-4_bi-vat-percentage-'+ str(i)] = self.format_to_integer(data[i]['vat'])
@@ -804,7 +804,7 @@ class Verifone(object):
 
             if 'unit_cost_gross' in data[i]:
                 product_data['l-t-1-20_bi-unit-gross-cost-'+ str(i)] = self.format_to_integer(data[i]['unit_cost_gross'])
-        
+
             if 'unit_cost' in data[i]:
                 product_data['l-t-1-20_bi-unit-cost-'+ str(i)] = self.format_to_integer(data[i]['unit_cost'])
 
@@ -817,10 +817,13 @@ class Verifone(object):
         :return: true if response is valid, boolean
         """
         values = data.copy()
-        sign1 = values['s-t-256-256_signature-one']   
-        sign2 = values['s-t-256-256_signature-two'] 
+        sign1 = values['s-t-256-256_signature-one']
+        sign2 = values['s-t-256-256_signature-two']
         del values['s-t-256-256_signature-one']
         del values['s-t-256-256_signature-two']
+
+        if 's-t-1-40_shop-order__phase' in values:
+            del values['s-t-1-40_shop-order__phase']
 
         plaintext = self.get_plaintext(values)
         result = self.verify_signature(sign1, 'SHA1', plaintext)
@@ -844,15 +847,15 @@ class Verifone(object):
         :return: true if response is valid, boolean
         """
         digest = ''
-        public_verifone = RSA.importKey(self._RSA_verifone_public_key) 
+        public_verifone = RSA.importKey(self._RSA_verifone_public_key)
         signer = PKCS1_v1_5.new(public_verifone)
         logs.debug("Plaintext for verifying: " + str(plaintext))
 
         if (signature_type == 'SHA1'):
-            digest = SHA.new(plaintext) 
+            digest = SHA.new(plaintext)
         elif (signature_type == 'SHA512'):
-            digest = SHA512.new(plaintext) 
-            
+            digest = SHA512.new(plaintext)
+
         if digest:
             return signer.verify(digest, binascii.unhexlify(signature))
 
