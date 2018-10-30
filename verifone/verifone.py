@@ -778,7 +778,8 @@ class Verifone(object):
             - vat: tax percentage with two decimal, float or integer
             - amount_gross: item gross amount including tax and discount with two decimal, float or integer
             - amount_net: item net amount calculated from unit cost times unit count with two decimal, float or integer
-            - unit_cost_gross: unit cost with two decimal, with discount and tax
+            - unit_cost_gross: unit cost with two decimal, with discount and tax, this must be filled if
+                unit cost is not filled, otherwise must not be used (optional)
             - unit_cost: unit cost with two decimal and without tax and discounts, this must be filled if
                 unit gross cost is not filled, otherwise must not be used (optional)
         :return: product data, dictionary
