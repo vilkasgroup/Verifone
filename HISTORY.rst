@@ -2,6 +2,11 @@
 History
 =======
 
+0.1.4 (2018-11-12)
+------------------
+
+* Fixed length of extra data fields. External id can be 255 characters and note 36 characters.
+
 0.1.3 (2018-10-26)
 ------------------
 
