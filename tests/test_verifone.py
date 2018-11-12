@@ -129,6 +129,9 @@ class TestVerifone(unittest.TestCase):
 
     def test_010_generate_payment_data(self):
         """ Test to generate payment data """
+        customer_id = '1234567890asdfghjklp-1234567890zxcvbnmklo'
+        note = "Note"
+
         params = {
             'order_number': '58459',
             'order_timestamp': '2018-08-02 09:14:12',
@@ -154,6 +157,8 @@ class TestVerifone(unittest.TestCase):
             'success_url_server': 'https://server.success.url',
             'save_method': 3,
             'payment_method': 'nordea-e-payment',
+            'customer_id': customer_id,
+            'note': note,
             'products': [
                 {
                     'name': 'er_7142303001',
@@ -176,6 +181,8 @@ class TestVerifone(unittest.TestCase):
         self.assertEqual(data['l-f-1-20_order-gross-amount'], 151)
         self.assertEqual(data['l-f-1-20_order-net-amount'], 122)
         self.assertEqual(data['l-f-1-20_order-vat-amount'], 29)
+        self.assertEqual(data['s-t-1-255_buyer-external-id'], customer_id)
+        self.assertEqual(data['s-t-1-36_order-note'], note)
 
     def test_011_generate_payment_data(self):
         """ Test to generate payment data when all data is not defined """

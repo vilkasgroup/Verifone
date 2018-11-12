@@ -578,8 +578,6 @@ class Verifone(object):
                 'address3': 's-t-1-30_delivery-address-line-three',
                 'city': 's-t-1-30_delivery-address-city',
                 'postal_code': 's-t-1-30_delivery-address-postal-code',
-                'note': 's-t-1-36_order-note',
-                'customer_id': 's-t-1-255_buyer-external-id',
                 'save_method': 'i-t-1-1_save-payment-method',
                 'payment_method': 's-t-1-30_payment-method-code',
             }
@@ -594,6 +592,12 @@ class Verifone(object):
                     values['i-t-1-3_delivery-address-country-code'] = country_data.numeric
                 else:
                     values['i-t-1-3_delivery-address-country-code'] = data['country']
+
+            if 'customer_id' in data:
+                values['s-t-1-255_buyer-external-id'] = self.get_substring(data['customer_id'], 255)
+
+            if 'note' in data:
+                values['s-t-1-36_order-note'] = self.get_substring(data['note'], 36)
 
             products = self.build_product_data(data['products'])
             values.update(products)
