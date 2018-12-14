@@ -9,7 +9,7 @@ name = "pypi"
 
 pycountry = "==18.12.8"
 rsa = "*"
-requests = "==2.20.1"
+requests = "==2.21.0"
 pycryptodome = "==3.7.2"
 
 
