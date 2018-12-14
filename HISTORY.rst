@@ -2,6 +2,11 @@
 History
 =======
 
+0.1.5 (2018-12-14)
+------------------
+
+* Changes in pycountry module which needed some changes also to Verifone's country and currency methods.
+
 0.1.4 (2018-11-12)
 ------------------
 
