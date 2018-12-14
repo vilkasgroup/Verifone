@@ -107,6 +107,9 @@ class Verifone(object):
             logs.debug("Wrong currency saved: " + self._currency)
             raise ValueError("Incorrect currency")
 
+        if currency_data is None:
+            raise ValueError("Incorrect currency")
+
         return currency_data.numeric
 
     @currency.setter
