@@ -7,16 +7,16 @@ name = "pypi"
 
 [packages]
 
-pycountry = "*"
+pycountry = "==18.12.8"
 rsa = "*"
-requests = "*"
-pycryptodome = "*"
+requests = "==2.20.1"
+pycryptodome = "==3.7.2"
 
 
 [dev-packages]
 
 coverage = "*"
-sphinx = "*"
+Sphinx = "*"
 sphinx-autobuild = "*"
 tox = "*"
 twine = "*"

@@ -59,7 +59,7 @@ class TestVerifone(unittest.TestCase):
         self.assertEqual(verifone_cl._currency, default_currency)
 
         verifone_cl = verifone.Verifone('test_apikey', '1234', 'Test', 'IntegrationTest', '6.0.37', 'abc')
-        self.assertEqual(verifone_cl._currency, default_currency)
+        self.assertNotEqual(verifone_cl._currency, default_currency)
 
     def test_004_create_object_currency_lower(self):
         """ Test creating a new object with currency in lower case """
@@ -84,8 +84,9 @@ class TestVerifone(unittest.TestCase):
         with self.assertRaises(ValueError):
             self._verifone_client.currency = "€"
 
-        with self.assertRaises(ValueError):
-            self._verifone_client.currency = "abc"
+        new_value = "abc"
+        self._verifone_client.currency = new_value
+        self.assertEqual(self._verifone_client._currency, new_value.upper())
 
         self._verifone_client._currency = "abc"
         with self.assertRaises(ValueError):
