@@ -2,6 +2,11 @@
 History
 =======
 
+0.1.6 (2018-12-17)
+------------------
+
+* Added 'dynamic_feedback' to method 'generate_payment_data'.
+
 0.1.5 (2018-12-14)
 ------------------
 
