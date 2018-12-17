@@ -170,7 +170,8 @@ class TestVerifone(unittest.TestCase):
                     'amount_net': 1.22,
                     'unit_cost_gross': 1.51,
                 },
-            ]
+            ],
+            'dynamic_feedback': 's-t-1-4_error-code,i-t-6-6_card-pan-first6,i-t-4-4_card-pan-last4',
         }
 
         data = self._verifone_client.generate_payment_data(params)
@@ -184,6 +185,7 @@ class TestVerifone(unittest.TestCase):
         self.assertEqual(data['l-f-1-20_order-vat-amount'], 29)
         self.assertEqual(data['s-t-1-255_buyer-external-id'], customer_id)
         self.assertEqual(data['s-t-1-36_order-note'], note)
+        self.assertIsNotNone(data['s-t-1-1024_dynamic-feedback'])
 
     def test_011_generate_payment_data(self):
         """ Test to generate payment data when all data is not defined """

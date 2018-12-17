@@ -514,6 +514,7 @@ class Verifone(object):
                     unit gross cost is not filled, otherwise must not be used (optional)
             - payment_timestamp: the payment start time, format is yyyy-MM-dd HH:mm:ss (optional)
             - order_timestamp: the orders time from web shop point of view, format is yyyy-MM-dd HH:mm:ss (optional)
+            - dynamic_feedback: comma separated list of optional parameters to be added to the response if available, string (optional)
 
         :return: generated payment data, dictionary
         """
@@ -583,6 +584,7 @@ class Verifone(object):
                 'postal_code': 's-t-1-30_delivery-address-postal-code',
                 'save_method': 'i-t-1-1_save-payment-method',
                 'payment_method': 's-t-1-30_payment-method-code',
+                'dynamic_feedback': 's-t-1-1024_dynamic-feedback',
             }
 
             for key, field in extra_fields.items():
