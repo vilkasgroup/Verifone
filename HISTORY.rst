@@ -2,6 +2,11 @@
 History
 =======
 
+0.1.7 (2018-12-17)
+------------------
+
+* Length of 'dynamic_feedback' parameter in method 'generate_payment_data'.
+
 0.1.6 (2018-12-17)
 ------------------
 
