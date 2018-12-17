@@ -584,7 +584,6 @@ class Verifone(object):
                 'postal_code': 's-t-1-30_delivery-address-postal-code',
                 'save_method': 'i-t-1-1_save-payment-method',
                 'payment_method': 's-t-1-30_payment-method-code',
-                'dynamic_feedback': 's-t-1-1024_dynamic-feedback',
             }
 
             for key, field in extra_fields.items():
@@ -603,6 +602,9 @@ class Verifone(object):
 
             if 'note' in data:
                 values['s-t-1-36_order-note'] = self.get_substring(data['note'], 36)
+
+            if 'dynamic_feedback' in data:
+                values['s-t-1-1024_dynamic-feedback'] = self.get_substring(data['dynamic_feedback'], 1024)
 
             products = self.build_product_data(data['products'])
             values.update(products)
