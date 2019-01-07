@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "741a2a1d548db805c44f04a033fd4ca27c54977a1230832b794360d3df425a4c"
+            "sha256": "2d07bbe4606b2f1a90b90a15ac38c138ce26bfa2c843e691fd1bcfa4f25ae436"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -365,9 +365,17 @@
         },
         "pyyaml": {
             "hashes": [
-                "sha256:ef3a0d5a5e950747f4a39ed7b204e036b37f9bddc7551c1a813b8727515a832e"
+                "sha256:8d6d96001aa7f0a6a4a95e8143225b5d06e41b1131044913fecb8f85a125714b",
+                "sha256:c8a88edd93ee29ede719080b2be6cb2333dfee1dccba213b422a9c8e97f2967b",
+                "sha256:3108529b78577327d15eec243f0ff348a0640b0c3478d67ad7f5648f93bac3e2",
+                "sha256:254bf6fda2b7c651837acb2c718e213df29d531eebf00edb54743d10bcb694eb",
+                "sha256:3c17fb92c8ba2f525e4b5f7941d850e7a48c3a59b32d331e2502a3cdc6648e76",
+                "sha256:1cbc199009e78f92d9edf554be4fe40fb7b0bef71ba688602a00e97a51909110",
+                "sha256:6f89b5c95e93945b597776163403d47af72d243f366bf4622ff08bdfd1c950b7",
+                "sha256:be622cc81696e24d0836ba71f6272a2b5767669b0d79fdcf0295d51ac2e156c8",
+                "sha256:f39411e380e2182ad33be039e8ee5770a5d9efe01a2bfb7ae58d9ba31c4a2a9d"
             ],
-            "version": "==4.2b1"
+            "version": "==4.2b4"
         },
         "readme-renderer": {
             "hashes": [
