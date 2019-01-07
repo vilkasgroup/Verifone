@@ -2,6 +2,11 @@
 History
 =======
 
+0.1.8 (2019-01-07)
+------------------
+
+* Updated Pipfiles and requirement files. There was security issue in PyYAML module.
+
 0.1.7 (2018-12-17)
 ------------------
 

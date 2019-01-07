@@ -21,6 +21,7 @@ sphinx-autobuild = "*"
 tox = "*"
 twine = "*"
 bumpversion = "*"
+pyyaml = "==4.2b1"
 
 
 [requires]
