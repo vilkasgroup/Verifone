@@ -356,7 +356,7 @@ class Verifone(object):
     def get_payment_status(self, data):
         """ Method gets payment status.
 
-        :param data: data for refunding, dictionary
+        :param data: data for status inquiry, dictionary
             - s-f-1-30_payment-method-code: the used payment method code, string
             - l-f-1-20_transaction-number: transaction number identifying the payment transaction, string
         :return: status for the payment, dictionary
