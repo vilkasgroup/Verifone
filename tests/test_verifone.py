@@ -32,6 +32,7 @@ class TestVerifone(unittest.TestCase):
         """ Set up our Verifone client for tests. It requires the following environment variables: AGREEMENTCODE, RSAPRIVATEKEY and EMAIL """
         cls._verifone_client = verifone.Verifone(os.environ.get('AGREEMENTCODE'), os.environ.get('RSAPRIVATEKEY'), os.environ.get('RSAVERIFONEPUBLICKEY'), "IntegrationTest", "6.0.37")
         cls._test_requests = os.environ.get('TESTSENDINGREQUEST')
+        cls._verifone_client_2 = verifone.Verifone(os.environ.get('AGREEMENTCODE'), os.environ.get('RSAPRIVATEKEY'), os.environ.get('RSAVERIFONEPUBLICKEY'), "IntegrationTest", "6.0.37", return_error_dict=1)
 
     def test_001_create_object_with_defaults(self):
         """ Test creating a new object with default values """
@@ -250,13 +251,19 @@ class TestVerifone(unittest.TestCase):
                 'i-t-1-4_bi-vat-percentage-0': '2400',
                 'i-t-1-4_bi-discount-percentage-0': 0,
             }
-            result = self._verifone_client.generate_payment_link(params)
+            with self.assertRaises(ValueError):
+                self._verifone_client.generate_payment_link(params)
+
+            result = self._verifone_client_2.generate_payment_link(params)
             self.assertTrue('s-f-1-30_error-message' in result)
 
     def test_013_get_payment_link_status(self):
         """ Test to get payment link status. """
         if (self._test_requests == "1"):
-            result = self._verifone_client.get_payment_link_status(12345678)
+            with self.assertRaises(ValueError):
+                self._verifone_client.get_payment_link_status(12345678)
+            
+            result = self._verifone_client_2.get_payment_link_status(12345678)
             self.assertTrue('s-f-1-30_error-message' in result)
 
     def test_014_reactivate_payment_link(self):
@@ -265,7 +272,10 @@ class TestVerifone(unittest.TestCase):
             current_time = datetime.now()
             timestamp = current_time.strftime('%Y-%m-%d %H:%M:%S')
 
-            result = self._verifone_client.reactivate_payment_link(12345678, timestamp)
+            with self.assertRaises(ValueError):
+                self._verifone_client.reactivate_payment_link(12345678, timestamp)
+            
+            result = self._verifone_client_2.reactivate_payment_link(12345678, timestamp)
             self.assertTrue('s-f-1-30_error-message' in result)
 
     def test_015_process_payment(self):
@@ -352,9 +362,11 @@ class TestVerifone(unittest.TestCase):
                 's-f-1-30_payment-method-code': 'visa',
                 'l-f-1-20_transaction-number': '123456',
             }
-            result = self._verifone_client.cancel_payment(params)
+            with self.assertRaises(ValueError):
+                self._verifone_client.cancel_payment(params)
+            
+            result = self._verifone_client_2.cancel_payment(params)
             self.assertTrue('s-f-1-30_error-message' in result)
-            self.assertEqual(result['s-f-1-30_error-message'],'invalid-transaction-number')
 
     def test_020_process_supplementary(self):
         """ Test to process supplementary. """
@@ -364,7 +376,10 @@ class TestVerifone(unittest.TestCase):
                 's-f-1-30_payment-method-code': 'visa',
                 'l-f-1-20_order-gross-amount': 500,
             }
-            result = self._verifone_client.process_supplementary(params)
+            with self.assertRaises(ValueError):
+                self._verifone_client.process_supplementary(params)
+
+            result = self._verifone_client_2.process_supplementary(params)
             self.assertTrue('s-f-1-30_error-message' in result)
             self.assertEqual(result['s-f-1-30_error-message'],'invalid-transaction-number')
 
@@ -440,49 +455,13 @@ class TestVerifone(unittest.TestCase):
             's-t-1-40_shop-order__phase': 'Takaisin tilaukseen'
         }
 
-        print(response)
-        self._verifone_client.verify_response(response)
+        result = self._verifone_client.verify_response(response) 
+        self.assertTrue(result)
 
-    def test_026_process_payment_with_error(self):
-        """ Test to process payment when error occurs. (Test system returns error if amount is in between 90-100.) """
-        if (self._test_requests == "1"):
-            params = {
-                's-f-1-30_buyer-first-name': 'Test',
-                's-f-1-30_buyer-last-name': 'Tester',
-                's-f-1-100_buyer-email-address': os.environ.get('EMAIL'),
-                's-t-1-30_buyer-phone-number': '123456789',
-                's-t-1-255_buyer-external-id': os.environ.get('EXTERNALID'),
-            }
-            response = self._verifone_client.list_saved_payment_methods(params)
-            saved_payment_id = response['l-t-1-20_payment-method-id-0']
-            self.assertIsNotNone(saved_payment_id)
-
-            params = {
-                'locale-f-2-5_payment-locale': 'fi_FI',
-                's-f-1-36_order-number': '1234',
-                'l-f-1-20_order-gross-amount': 9100,
-                's-f-1-30_buyer-first-name': "Test",
-                's-f-1-30_buyer-last-name': "Tester",
-                's-t-1-30_buyer-phone-number': 123456789,
-                's-f-1-100_buyer-email-address': os.environ.get('EMAIL'),
-                's-t-1-30_delivery-address-line-one': "Test Street 3",
-                's-t-1-30_delivery-address-city': "Tampere",
-                's-t-1-30_delivery-address-postal-code': "33210",
-                'i-t-1-3_delivery-address-country-code': 'FI',
-                's-t-1-30_bi-name-0': 'Test Product',
-                'l-t-1-20_bi-unit-gross-cost-0': 9100,
-                'i-t-1-11_bi-unit-count-0': 1,
-                'l-t-1-20_bi-gross-amount-0': 9100,
-                'l-t-1-20_bi-net-amount-0': 7339,
-                'i-t-1-4_bi-vat-percentage-0': 2400,
-                'i-t-1-4_bi-discount-percentage-0': 0,
-                's-t-1-255_buyer-external-id': os.environ.get('EXTERNALID'),
-                'l-t-1-20_saved-payment-method-id': saved_payment_id,
-            }
-            response = self._verifone_client.process_payment(params)
-            self.assertTrue('s-f-1-30_error-message' in response)
-
-
+    def test_026_verify_incorrect_signature(self):
+        """ Test to verify incorrect signature """
+        result = self._verifone_client.verify_signature("signature", 'SHA123', "Test")
+        self.assertFalse(result)
 
 
 if __name__ == '__main__':
