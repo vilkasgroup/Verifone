@@ -2,6 +2,12 @@
 History
 =======
 
+0.1.10 (2019-02-28)
+-------------------
+
+* Modified method "send_request". It does not throw anymore error if 's-f-1-30_error-message' is returned.
+* Updated Pipfile.lock.
+
 0.1.9 (2019-02-20)
 ------------------
 

@@ -666,7 +666,7 @@ class Verifone(object):
         parsed_response = self.parse_response(response.content)
 
         if 's-f-1-30_error-message' in parsed_response:
-            raise ValueError(parsed_response['s-f-1-30_error-message'])
+            return parsed_response
 
         self.verify_response(parsed_response)
 
