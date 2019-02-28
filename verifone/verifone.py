@@ -35,11 +35,13 @@ class Verifone(object):
     :param version: version of the web shop software, string with length of 1-10 characters
     :param interface_version: version of the payment interface, string with length of 1-11 numeric characters
     :param test_mode: 1 if use test server, default is 0, boolean
+    :param return_error_dict: if 1 then returns data received from Verifone also when error occurs. 
+        If value is 0, then raise an error. Default is 0, boolean
     :rtype: object
     """
     _default_currency = 'EUR'
 
-    def __init__(self, agreement_code, RSA_private_key, RSA_verifone_public_key, software_name, version, currency=_default_currency, interface_version='5', test_mode=0):
+    def __init__(self, agreement_code, RSA_private_key, RSA_verifone_public_key, software_name, version, currency=_default_currency, interface_version='5', test_mode=0, return_error_dict=0):
         """ Initialize Verifone client. """
         currency = self.check_currency(currency)
 
@@ -51,6 +53,7 @@ class Verifone(object):
         self._interface_version = interface_version
         self._currency = currency
         self._test_mode = test_mode
+        self._return_error_dict = return_error_dict
 
     @property
     def endpoint(self):
@@ -666,7 +669,10 @@ class Verifone(object):
         parsed_response = self.parse_response(response.content)
 
         if 's-f-1-30_error-message' in parsed_response:
-            return parsed_response
+            if self._return_error_dict:
+                return parsed_response
+            else:
+                raise ValueError(parsed_response['s-f-1-30_error-message'])
 
         self.verify_response(parsed_response)
 

@@ -2,6 +2,12 @@
 History
 =======
 
+0.1.11 (2019-02-28)
+-------------------
+
+* Modified Verifone class. New parameter "return_error_dict" was added.
+* Updated test cases.
+
 0.1.10 (2019-02-28)
 -------------------
 
