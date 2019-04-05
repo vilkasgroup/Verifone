@@ -10,7 +10,7 @@ name = "pypi"
 pycountry = "==18.12.8"
 rsa = "*"
 requests = "==2.21.0"
-pycryptodome = "==3.7.3"
+pycryptodome = "==3.8.1"
 
 
 [dev-packages]
