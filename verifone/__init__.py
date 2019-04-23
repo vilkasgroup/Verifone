@@ -4,4 +4,4 @@
 
 __author__ = """Jaana Sarajärvi"""
 __email__ = 'jaana.sarajarvi@vilkas.fi'
-__version__ = '0.1.15'
+__version__ = '0.1.16'
