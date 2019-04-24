@@ -617,7 +617,7 @@ class Verifone(object):
             signature2 = self.generate_signature(values, 'SHA512')
             values['s-t-256-256_signature-one'] = signature
             values['s-t-256-256_signature-two'] = signature2
-            logs.debug(values)
+            logs.debug("Values for payment: %s", values)
 
             return values
 
@@ -648,7 +648,7 @@ class Verifone(object):
         signature2 = self.generate_signature(data, 'SHA512')
         data['s-t-256-256_signature-one'] = signature
         data['s-t-256-256_signature-two'] = signature2
-        logs.debug(data)
+        logs.debug("Data for Verifone request: %s", data)
 
         headers = {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -658,8 +658,8 @@ class Verifone(object):
         logs.debug('URL: ' + url)
 
         response = requests.post(url, headers=headers, data=data)
-        logs.debug(response)
-        logs.debug(response.content)
+        logs.debug("Response from Verifone: %s", response)
+        logs.debug("Content of Verifone response: %s", response.content)
 
         if response.status_code != 200:
             raise ConnectionError(str(response.content))
@@ -717,7 +717,7 @@ class Verifone(object):
         for key, value in (sorted(data.items())):
             name_key_pairs.append(key + "=" + str(value))
 
-        logs.debug(name_key_pairs)
+        logs.debug("Names and keys for signature: %s", name_key_pairs)
 
         plaintext =  ';'.join(name_key_pairs) + ';'
         plaintext = plaintext.encode('utf-8')
@@ -731,7 +731,7 @@ class Verifone(object):
         :param content: response from Verifone, string
         :return: result, result from Verifone in dictionary
         """
-        logs.debug(content)
+        logs.debug("Content before parsing: %s", content)
 
         params = content.decode().split('&')
         result = {}
@@ -741,7 +741,7 @@ class Verifone(object):
             value = urllib.parse.unquote_plus(value) # for example times are in format: 2018-08-03+06%3A59%3A52
             result[key] = value
 
-        logs.debug(result)
+        logs.debug("Parsed content: %s", result)
         return result
 
     def generate_token(self, order_no, payment_timestamp):
@@ -753,12 +753,12 @@ class Verifone(object):
         """
         elements = (self._agreement_code, order_no, payment_timestamp)
         plaintext = ';'.join(elements)
-        logs.debug(plaintext)
+        logs.debug("Plaintext for generate token: %s", plaintext)
 
         plaintext = plaintext.encode('utf-8')
         token = SHA256.new(plaintext)
         token = token.hexdigest()
-        logs.debug(token)
+        logs.debug("Token: %s", token)
 
         return self.get_substring(token, 32).upper()
 
