@@ -422,6 +422,8 @@ class TestVerifone(unittest.TestCase):
 
         verifone_cl.test_mode = 1
         self.assertEqual(verifone_cl.posturl, 'https://epayment.test.point.fi/pw/payment')
+        self.assertEqual(verifone_cl.posturl1, 'https://epayment.test.point.fi/pw/payment')
+        self.assertEqual(verifone_cl.posturl2, 'https://epayment.test.point.fi/pw/payment')
 
     def test_024_build_product_data(self):
         """ Test building product data """
@@ -471,6 +473,13 @@ class TestVerifone(unittest.TestCase):
         """ Test to verify incorrect signature """
         result = self._verifone_client.verify_signature("signature", 'SHA123', "Test")
         self.assertFalse(result)
+
+    def test_027_check_currency(self):
+        """ Test that currency is valid """
+        current_currency = self._verifone_client._currency 
+        new_value = "123"
+        currency = self._verifone_client.check_currency(new_value)
+        self.assertEqual(current_currency, currency)
 
 
 if __name__ == '__main__':
