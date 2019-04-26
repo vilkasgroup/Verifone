@@ -66,14 +66,56 @@ class Verifone(object):
         return 'https://epayment1.point.fi/pw/serverinterface'
 
     @property
-    def posturl(self):
-        """ Return post url.
+    def endpoint2(self):
+        """ Return endpoint (node2). Verifone has 2 production environment URLs 
+        so if first one does not answer, this can be used instead.
+
+        :return: endpoint, string
+        """
+        if self._test_mode:
+            return 'https://epayment.test.point.fi/pw/serverinterface'
+        return 'https://epayment2.point.fi/pw/serverinterface'
+
+    @property
+    def posturl1(self):
+        """ Return post url (Verifone node 1).
 
         :return: post url, string
         """
         if self._test_mode:
             return 'https://epayment.test.point.fi/pw/payment'
         return 'https://epayment1.point.fi/pw/payment'
+
+    @property
+    def posturl2(self):
+        """ Return post url (Verifone node 2).
+
+        :return: post url, string
+        """
+        if self._test_mode:
+            return 'https://epayment.test.point.fi/pw/payment'
+        return 'https://epayment2.point.fi/pw/payment'
+
+    @property
+    def posturl(self):
+        """ Return post url. If production mode is used, then check that endpoint is available.
+        If not use another endpoint.
+
+        :return: post url, string
+        """
+        if self._test_mode:
+            return 'https://epayment.test.point.fi/pw/payment'
+
+        url = self.posturl1
+        response = requests.post(url)
+        logs.debug("Ping response from Verifone: %s", response)
+
+        if response.status_code != 200:
+            url = self.posturl2
+            response = requests.post(url)
+            logs.debug("Ping response from Verifone: %s", response)
+
+        return url
 
     @property
     def test_mode(self):
@@ -654,7 +696,7 @@ class Verifone(object):
             'Content-Type': 'application/x-www-form-urlencoded',
         }
 
-        url = self.endpoint
+        url = self.get_endpoint_url()
         logs.debug('URL: ' + url)
 
         response = requests.post(url, headers=headers, data=data)
@@ -677,6 +719,23 @@ class Verifone(object):
         self.verify_response(parsed_response)
 
         return parsed_response
+    
+    def get_endpoint_url(self):
+        """ Method returns endpoint url for server to server calls. Verifone has 2 production environment so 
+        check first which one production server is available.
+
+        :return: endpoint url, string
+        """
+        url = self.endpoint
+        response = requests.post(url)
+        logs.debug("Ping response from Verifone: %s", response)
+
+        if response.status_code != 200:
+            url = self.endpoint2
+            response = requests.post(url)
+            logs.debug("Ping response from Verifone: %s", response)
+
+        return url
 
     def generate_signature(self, data, signature_type):
         """ Method generates digital signature from the given values.

@@ -2,6 +2,11 @@
 History
 =======
 
+0.1.18 (2019-04-26)
+-------------------
+
+* Check is endpoint available. If not, use other endpoint.
+
 0.1.17 (2019-04-24)
 -------------------
 

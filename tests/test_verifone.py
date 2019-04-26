@@ -104,6 +104,10 @@ class TestVerifone(unittest.TestCase):
             response = self._verifone_client.is_available()
             self.assertTrue(response['i-f-1-1_availability'] == '2')
 
+            self._verifone_client._test_mode = 1
+            response = self._verifone_client.is_available()
+            self.assertTrue(response['i-f-1-1_availability'] == '2')
+
     def test_007_get_payment_methods(self):
         """ Test to get all available payment methods """
         if (self._test_requests == "1"):
@@ -388,9 +392,11 @@ class TestVerifone(unittest.TestCase):
         """ Test for getting endpoints """
         verifone_cl = verifone.Verifone('test_apikey', '1234', 'Test', 'IntegrationTest', '6.0.37', 'eur')
         self.assertEqual(verifone_cl.endpoint, 'https://epayment1.point.fi/pw/serverinterface')
+        self.assertEqual(verifone_cl.endpoint2, 'https://epayment2.point.fi/pw/serverinterface')
 
         verifone_cl.test_mode = 1
         self.assertEqual(verifone_cl.endpoint, 'https://epayment.test.point.fi/pw/serverinterface')
+        self.assertEqual(verifone_cl.endpoint2, 'https://epayment.test.point.fi/pw/serverinterface')
 
     def test_022_save_test_mode(self):
         """ Test for save test mode """
@@ -410,6 +416,9 @@ class TestVerifone(unittest.TestCase):
         """ Test for getting post urls """
         verifone_cl = verifone.Verifone('test_apikey', '1234', 'Test', 'IntegrationTest', '6.0.37', 'eur')
         self.assertEqual(verifone_cl.posturl, 'https://epayment1.point.fi/pw/payment')
+
+        self.assertEqual(verifone_cl.posturl1, 'https://epayment1.point.fi/pw/payment')
+        self.assertEqual(verifone_cl.posturl2, 'https://epayment2.point.fi/pw/payment')
 
         verifone_cl.test_mode = 1
         self.assertEqual(verifone_cl.posturl, 'https://epayment.test.point.fi/pw/payment')
