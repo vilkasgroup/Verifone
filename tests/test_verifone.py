@@ -192,6 +192,9 @@ class TestVerifone(unittest.TestCase):
         self.assertEqual(data['s-t-1-36_order-note'], note)
         self.assertIsNotNone(data['s-t-1-1024_dynamic-feedback'])
 
+        self.assertEqual(data['s-t-1-30_bi-name-0'], 'er_7142303001')
+        self.assertEqual(len(data['s-t-1-30_bi-name-0']), 13)
+
     def test_011_generate_payment_data(self):
         """ Test to generate payment data when all data is not defined """
         params = {
@@ -480,6 +483,82 @@ class TestVerifone(unittest.TestCase):
         new_value = "123"
         currency = self._verifone_client.check_currency(new_value)
         self.assertEqual(current_currency, currency)
+
+    def test_028_process_payment(self):
+        """ Test to process payment when 's-t-1-30_bi-name-0' data is longer than Verifone accepts """
+        if (self._test_requests == "1"):
+            params = {
+                's-f-1-30_buyer-first-name': 'Test',
+                's-f-1-30_buyer-last-name': 'Tester',
+                's-f-1-100_buyer-email-address': os.environ.get('EMAIL'),
+                's-t-1-30_buyer-phone-number': '123456789',
+                's-t-1-255_buyer-external-id': os.environ.get('EXTERNALID'),
+            }
+            response = self._verifone_client.list_saved_payment_methods(params)
+            saved_payment_id = response['l-t-1-20_payment-method-id-0']
+            self.assertIsNotNone(saved_payment_id)
+
+            params = {
+                'locale-f-2-5_payment-locale': 'fi_FI',
+                's-f-1-36_order-number': '1234',
+                'l-f-1-20_order-gross-amount': 2391,
+                's-f-1-30_buyer-first-name': "Test",
+                's-f-1-30_buyer-last-name': "Tester",
+                's-t-1-30_buyer-phone-number': 123456789,
+                's-f-1-100_buyer-email-address': os.environ.get('EMAIL'),
+                's-t-1-30_delivery-address-line-one': "Test Street 3",
+                's-t-1-30_delivery-address-city': "Tampere",
+                's-t-1-30_delivery-address-postal-code': "33210",
+                'i-t-1-3_delivery-address-country-code': 'FI',
+                's-t-1-30_bi-name-0': 'Test Product: test with long product name',
+                'l-t-1-20_bi-unit-gross-cost-0': 2391,
+                'i-t-1-11_bi-unit-count-0': 1,
+                'l-t-1-20_bi-gross-amount-0': 2391,
+                'l-t-1-20_bi-net-amount-0': 1928,
+                'i-t-1-4_bi-vat-percentage-0': 2400,
+                'i-t-1-4_bi-discount-percentage-0': 0,
+                's-t-1-255_buyer-external-id': os.environ.get('EXTERNALID'),
+                'l-t-1-20_saved-payment-method-id': saved_payment_id,
+            }
+            response = self._verifone_client.process_payment(params)
+            self.assertTrue('l-f-1-20_transaction-number' in response)
+            self.assertIsNotNone(response['l-f-1-20_transaction-number'])
+
+    def test_029_generate_payment_data(self):
+        """ Test to generate payment data with too long product names """
+        params = {
+            'order_number': '58459',
+            'locale': 'fi_FI',
+            'first_name': 'Test',
+            'last_name': 'Tester',
+            'email': 'test@test.test',
+            'cancel_url': 'https://cancel.url',
+            'error_url': 'https://error.url',
+            'expired_url': 'https://expired.url',
+            'rejected_url': 'https://rejected.url',
+            'success_url': 'https://success.url',
+            'success_url_server': 'https://server.success.url',
+            'skip_confirmation': 1,
+            'country': '246',
+            'products': [
+                {
+                    'name': 'Test Product: test with long product name',
+                    'pieces': 1,
+                    'vat': 24.00,
+                },
+                {
+                    'name': 'Test Product 2: test with long product name',
+                    'pieces': 1,
+                    'vat': 24.00,
+                },
+            ]
+        }
+
+        data = self._verifone_client.generate_payment_data(params)
+        self.assertEqual(data['s-t-1-30_bi-name-0'], 'Test Product: test with long p')
+        self.assertEqual(len(data['s-t-1-30_bi-name-0']), 30)
+        self.assertEqual(data['s-t-1-30_bi-name-1'], 'Test Product 2: test with long')
+        self.assertEqual(len(data['s-t-1-30_bi-name-1']), 30)
 
 
 if __name__ == '__main__':

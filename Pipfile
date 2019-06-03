@@ -10,7 +10,7 @@ name = "pypi"
 pycountry = "==18.12.8"
 rsa = "*"
 requests = "==2.22.0"
-pycryptodome = "==3.8.1"
+pycryptodome = "==3.8.2"
 
 
 [dev-packages]
@@ -21,7 +21,7 @@ sphinx-autobuild = "*"
 tox = "*"
 twine = "*"
 bumpversion = "*"
-PyYAML = "==4.2b4"
+PyYAML = "==5.1"
 
 
 [requires]

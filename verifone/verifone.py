@@ -369,6 +369,8 @@ class Verifone(object):
             country_data = pycountry.countries.get(alpha_2 = data['i-t-1-3_delivery-address-country-code'])
             data['i-t-1-3_delivery-address-country-code'] = country_data.numeric
 
+        self.check_product_names(data)
+
         # merge data to request options
         options.update(data)
 
@@ -868,7 +870,7 @@ class Verifone(object):
             else:
                 discount = 0
 
-            product_data['s-t-1-30_bi-name-'+ str(i)] = data[i]['name']
+            product_data['s-t-1-30_bi-name-'+ str(i)] = self.get_substring(data[i]['name'], 30)
             product_data['i-t-1-11_bi-unit-count-'+ str(i)] = data[i]['pieces']
             product_data['i-t-1-4_bi-vat-percentage-'+ str(i)] = self.format_to_integer(data[i]['vat'])
             product_data['i-t-1-4_bi-discount-percentage-'+ str(i)] = self.format_to_integer(discount)
@@ -937,3 +939,14 @@ class Verifone(object):
             return signer.verify(digest, binascii.unhexlify(signature))
 
         return False
+
+    def check_product_names(self, data):
+        """ Method checks that product name can not be more than 30 character.
+        If it is longer, take only first 30 character.
+
+        :param data: data sent to Verifone, dictionary
+        :return: -
+        """
+        for key, value in data.items():
+            if key.startswith("s-t-1-30_bi-name-"):
+                data[key] = self.get_substring(data[key], 30)
