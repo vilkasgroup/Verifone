@@ -2,6 +2,11 @@
 History
 =======
 
+0.1.20 (2019-05-27)
+-------------------
+
+* Added checking that product name can not be longer than 30 character.
+
 0.1.19 (2019-05-21)
 -------------------
 
