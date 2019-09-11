@@ -549,6 +549,7 @@ class Verifone(object):
                 3: disable save payment options
             - customer_id: identifier for the customer (optional)
             - payment_method: selected payment method (optional)
+            - saved_payment_method_id: ID of the saved payment method (optional)
             - products: product data, there can be 1-50 basket items
                 - name: name of the basket item, max length is 30 character
                 - pieces: number of units in the item, integer or float
@@ -636,6 +637,9 @@ class Verifone(object):
             for key, field in extra_fields.items():
                 if key in data:
                     values[field] = self.get_substring(data[key], 30)
+
+            if 'saved_payment_method_id' in data:
+                values['l-t-1-20_saved-payment-method-id'] = self.get_substring(data['saved_payment_method_id'], 64)
 
             if 'country' in data:
                 if data['country'].isalpha():
