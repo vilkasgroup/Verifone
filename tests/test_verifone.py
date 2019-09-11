@@ -560,6 +560,65 @@ class TestVerifone(unittest.TestCase):
         self.assertEqual(data['s-t-1-30_bi-name-1'], 'Test Product 2: test with long')
         self.assertEqual(len(data['s-t-1-30_bi-name-1']), 30)
 
+    def test_030_generate_payment_data(self):
+        """ Test to generate payment data when customer id is defined """
+        params = {
+            'order_number': '58459',
+            'locale': 'fi_FI',
+            'first_name': 'Test',
+            'last_name': 'Tester',
+            'email': 'test@test.test',
+            'cancel_url': 'https://cancel.url',
+            'error_url': 'https://error.url',
+            'expired_url': 'https://expired.url',
+            'rejected_url': 'https://rejected.url',
+            'success_url': 'https://success.url',
+            'success_url_server': 'https://server.success.url',
+            'skip_confirmation': 1,
+            'country': '246',
+            'customer_id': 'testi123456',
+            'products': [
+                {
+                    'name': 'Test Product: test with long product name',
+                    'pieces': 1,
+                    'vat': 24.00,
+                },
+            ]
+        }
+
+        data = self._verifone_client.generate_payment_data(params)
+        self.assertEqual(data['s-t-1-255_buyer-external-id'], 'testi123456')
+
+    def test_031_generate_payment_data(self):
+        """ Test to generate payment data when saved payment method id is defined """
+        params = {
+            'order_number': '58459',
+            'locale': 'fi_FI',
+            'first_name': 'Test',
+            'last_name': 'Tester',
+            'email': 'test@test.test',
+            'cancel_url': 'https://cancel.url',
+            'error_url': 'https://error.url',
+            'expired_url': 'https://expired.url',
+            'rejected_url': 'https://rejected.url',
+            'success_url': 'https://success.url',
+            'success_url_server': 'https://server.success.url',
+            'skip_confirmation': 1,
+            'country': '246',
+            'customer_id': 'testi123456',
+            'saved_payment_method_id': 'test123456',
+            'products': [
+                {
+                    'name': 'Test Product: test with long product name',
+                    'pieces': 1,
+                    'vat': 24.00,
+                },
+            ]
+        }
+
+        data = self._verifone_client.generate_payment_data(params)
+        self.assertEqual(data['l-t-1-20_saved-payment-method-id'], 'test123456')
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

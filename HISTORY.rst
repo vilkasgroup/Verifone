@@ -2,6 +2,11 @@
 History
 =======
 
+0.1.21 (2019-09-11)
+-------------------
+
+* Added 'l-t-1-20_saved-payment-method-id' to 'generate_payment_data' function.
+
 0.1.20 (2019-05-27)
 -------------------
 
