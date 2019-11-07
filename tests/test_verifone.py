@@ -418,13 +418,13 @@ class TestVerifone(unittest.TestCase):
     def test_023_get_endpoint(self):
         """ Test for getting post urls """
         verifone_cl = verifone.Verifone('test_apikey', '1234', 'Test', 'IntegrationTest', '6.0.37', 'eur')
-        self.assertEqual(verifone_cl.posturl, 'https://epayment1.point.fi/pw/payment')
+        self.assertIsNotNone(verifone_cl.posturl)
 
         self.assertEqual(verifone_cl.posturl1, 'https://epayment1.point.fi/pw/payment')
         self.assertEqual(verifone_cl.posturl2, 'https://epayment2.point.fi/pw/payment')
 
         verifone_cl.test_mode = 1
-        self.assertEqual(verifone_cl.posturl, 'https://epayment.test.point.fi/pw/payment')
+        self.assertIsNotNone(verifone_cl.posturl)
         self.assertEqual(verifone_cl.posturl1, 'https://epayment.test.point.fi/pw/payment')
         self.assertEqual(verifone_cl.posturl2, 'https://epayment.test.point.fi/pw/payment')
 
