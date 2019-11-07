@@ -902,11 +902,18 @@ class Verifone(object):
         values = data.copy()
         sign1 = values['s-t-256-256_signature-one']
         sign2 = values['s-t-256-256_signature-two']
-        del values['s-t-256-256_signature-one']
-        del values['s-t-256-256_signature-two']
 
-        if 's-t-1-40_shop-order__phase' in values:
-            del values['s-t-1-40_shop-order__phase']
+        remove_keys = [
+            's-t-256-256_signature-one',
+            's-t-256-256_signature-two',
+            's-t-1-40_shop-receipt__phase',
+            's-t-1-40_shop-order__phase',
+            's-t-1-40_submit'
+        ]
+
+        for key in remove_keys:
+            if key in values:
+                del values[key]
 
         plaintext = self.get_plaintext(values)
         result = self.verify_signature(sign1, 'SHA1', plaintext)
