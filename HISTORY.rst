@@ -2,6 +2,11 @@
 History
 =======
 
+0.1.22 (2019-11-07)
+-------------------
+
+* Fields 's-t-1-40_shop-receipt__phase' and 's-t-1-40_submit' are now excluded from the signature verification process.
+
 0.1.21 (2019-09-11)
 -------------------
 
