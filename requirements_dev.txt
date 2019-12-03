@@ -7,4 +7,4 @@ tox==3.14.1
 coverage==4.5.4
 Sphinx==2.2.1
 twine==3.1.1
-PyYAML==5.1.2
+PyYAML==5.2
