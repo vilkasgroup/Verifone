@@ -7,7 +7,7 @@ name = "pypi"
 pycountry = "==19.8.18"
 rsa = "*"
 requests = "==2.22.0"
-pycryptodome = "==3.9.3"
+pycryptodome = "==3.9.6"
 
 [dev-packages]
 coverage = "*"
