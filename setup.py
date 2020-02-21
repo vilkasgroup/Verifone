@@ -27,7 +27,7 @@ test_requirements = [
 
 setup(
     name='verifone',
-    version='0.1.22',
+    version='0.1.23',
     description="Python package for Verifone",
     long_description=readme + '\n\n' + history,
     author="Jaana Sarajärvi",
