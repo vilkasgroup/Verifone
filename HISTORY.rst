@@ -2,7 +2,14 @@
 History
 =======
 
-0.1.23 (2030-02-21)
+0.1.24 (2020-06-29)
+-------------------
+
+* Upadated version of pycryptodome.
+* Updated version of requests.
+* Updated Pipfile.lock.
+
+0.1.23 (2020-02-21)
 -------------------
 
 * Updated version of requests.
