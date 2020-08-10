@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "d85ab8764b3b8f860521944fa571bb71d83adb810ca1cb66c6c208b1e20e78f7"
+            "sha256": "6af51b74afbfebb6202f8e2829fd873bd13f5313bf0902f2b0c9e82c10166642"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -57,9 +57,9 @@
         },
         "pycountry": {
             "hashes": [
-                "sha256:3c57aa40adcf293d59bebaffbe60d8c39976fba78d846a018dc0c2ec9c6cb3cb"
+                "sha256:64404be51ce40a84bdbcce524fdd598d738733f0944039966857aad181e1b155"
             ],
-            "version": "==19.8.18"
+            "version": "==20.7.2"
         },
         "pycryptodome": {
             "hashes": [
@@ -327,11 +327,11 @@
         },
         "importlib-resources": {
             "hashes": [
-                "sha256:83985739b3a6679702f9ab33f0ad016ad564664d0568a31ac14d7c64789453e6",
-                "sha256:f5edfcece1cc9435d0979c19e08739521f4cf1aa1adaf6e571f732df6f568962"
+                "sha256:19f745a6eca188b490b1428c8d1d4a0d2368759f32370ea8fb89cad2ab1106c3",
+                "sha256:d028f66b66c0d5732dae86ba4276999855e162a749c92620a38c1d779ed138a7"
             ],
             "markers": "python_version < '3.7'",
-            "version": "==2.0.1"
+            "version": "==3.0.0"
         },
         "jeepney": {
             "hashes": [
@@ -611,10 +611,10 @@
         },
         "tox": {
             "hashes": [
-                "sha256:a0d36849e59ac4a28664e80951a634b0e920d88047ce3fa8fa7b45216e573f30",
-                "sha256:db12b48359ba2cbc8c8f7ab712706ee67d59f8f9e8e0c795dcc45349b8784e48"
+                "sha256:60c3793f8ab194097ec75b5a9866138444f63742b0f664ec80be1222a40687c5",
+                "sha256:9a746cda9cadb9e1e05c7ab99f98cfcea355140d2ecac5f97520be94657c3bc7"
             ],
-            "version": "==3.16.0"
+            "version": "==3.16.1"
         },
         "tqdm": {
             "hashes": [

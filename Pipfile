@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pycountry = "==19.8.18"
+pycountry = "==20.7.2"
 rsa = "*"
 requests = "==2.24.0"
 pycryptodome = "==3.9.8"
