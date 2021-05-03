@@ -16,7 +16,7 @@ sphinx-autobuild = "*"
 tox = "*"
 twine = "*"
 bumpversion = "*"
-PyYAML = "==5.1"
+PyYAML = "*"
 
 [requires]
 python_version = "3.6"
