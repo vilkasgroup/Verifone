@@ -5,5 +5,5 @@ flake8==4.0.1
 tox==3.24.5
 Sphinx==4.4.0
 coverage==6.3.1
-twine==3.7.1
+twine==3.8.0
 PyYAML==6.0
