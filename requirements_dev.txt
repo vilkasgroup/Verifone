@@ -4,6 +4,6 @@ watchdog==2.1.9
 flake8==4.0.1
 tox==3.25.1
 Sphinx==5.0.2
-coverage==6.4.1
+coverage==6.4.2
 twine==4.0.1
 PyYAML==6.0
