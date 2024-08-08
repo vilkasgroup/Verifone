@@ -3,7 +3,7 @@ wheel==0.43.0
 watchdog==4.0.1
 flake8==7.1.0
 tox==4.17.1
-Sphinx==7.3.7
+Sphinx==8.0.2
 coverage==7.6.1
 twine==5.1.0
 PyYAML==6.0.2
